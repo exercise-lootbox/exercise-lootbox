@@ -1,10 +1,3 @@
-
-function Search() {
-  return (
-    <div>
-      <h1>Search</h1>
-    </div>
-  );
-}
+import Search from "./Search";
 
 export default Search;

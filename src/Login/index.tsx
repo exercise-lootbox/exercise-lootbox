@@ -1,10 +1,3 @@
-
-function Login() {
-  return (
-    <div>
-      <h1>Login</h1>
-    </div>
-  );
-}
+import Login from "./Login";
 
 export default Login;
