@@ -2,6 +2,8 @@ import { useDispatch } from 'react-redux'
 import { setAuthToken } from './userReducer';
 import { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import "./Login.css";
+import "../index.css"
 
 function Login() {
   // TODO: add form elements for other user info once we have DB set up
@@ -29,8 +31,18 @@ function Login() {
   }
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="fc-login-container">
+      <div className="fc-login-background d-none d-sm-block">
+        <h1>Logo Here</h1>
+        <h2>Welcome to FitCoin 💪</h2>
+      </div>
+      <div className="fc-login-form shadow pt-2">
+        <div className="fc-login-form-title">
+          <h1>Sign In</h1>
+        </div>
+        {/* form-group?? */}
+        <input type="text" className="form-control" />
+      </div>
     </div>
   );
 }
