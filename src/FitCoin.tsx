@@ -8,19 +8,23 @@ import Home from './Home';
 import Login from './Login';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from 'react-redux';
-import { setAuthToken } from './Login/userReducer';
+import { setAuthToken, setUserId } from './Login/userReducer';
 
 function FitCoin() {
   const auth = getAuth();
   const dispatch = useDispatch();
 
   // Listen for auth state changes throughout entire app
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      dispatch(setAuthToken(user.getIdToken()))
+      const token = await user.getIdToken();
+      dispatch(setAuthToken(token))
+      dispatch(setUserId(user.uid))
+
       // TODO: set any other user info once we have DB set up
     } else {
-      dispatch(setAuthToken(undefined))
+      dispatch(setAuthToken(""))
+      dispatch(setUserId(""))
     }
   });
 

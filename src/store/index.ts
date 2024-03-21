@@ -3,7 +3,9 @@ import userReducer from "../Login/userReducer";
 
 export interface FitCoinState {
   userReducer: {
-    authToken: string | undefined;
+    isLoggedIn: boolean;
+    authToken: string;
+    userId: string;
   };
 }
 const store = configureStore({
