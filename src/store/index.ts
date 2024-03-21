@@ -6,6 +6,7 @@ export interface FitCoinState {
     isLoggedIn: boolean;
     authToken: string;
     userId: string;
+    stravaId: string;
   };
 }
 const store = configureStore({

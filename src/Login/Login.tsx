@@ -7,7 +7,6 @@ import "../index.css"
 import { Navigate } from 'react-router';
 
 function Login() {
-  // TODO: add form elements for other user info once we have DB set up
   const auth = getAuth()
   const isLoggedIn = useSelector((state: FitCoinState) => state.userReducer.isLoggedIn);
   const [isSignIn, setIsSignIn] = useState(true);
@@ -56,7 +55,7 @@ function Login() {
     if (isSignIn) {
       setErrorMessage("Invalid username or password. If you don't have an account, click Register above.");
     } else {
-      setErrorMessage("Error creating account. Please try again.");
+      setErrorMessage("Error creating account. If you already have an account, click Sign In above.");
     }
   }, [isSignIn]);
 
@@ -130,9 +129,9 @@ function Login() {
       </div>);
   }
 
-  // Redirect the user back to home if we detect they are logged in
+  // Redirect the user to connect their Strava account
   if (isLoggedIn) {
-    return <Navigate to="/home" replace />
+    return <Navigate to="/integrations/strava" replace />
   }
 
   return (

@@ -8,7 +8,8 @@ import Home from './Home';
 import Login from './Login';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from 'react-redux';
-import { setAuthToken, setUserId } from './Login/userReducer';
+import { setAuthToken, setUserId, resetUser } from './Login/userReducer';
+import StravaConnect from './Integrations/Strava';
 
 function FitCoin() {
   const auth = getAuth();
@@ -21,13 +22,12 @@ function FitCoin() {
       dispatch(setAuthToken(token))
       dispatch(setUserId(user.uid))
 
-      // TODO: set any other user info once we have DB set up
+      // TODO: Make calls to DB here for user info not stored in Firebase
+      // (name, stravaId, etc.)
     } else {
-      dispatch(setAuthToken(""))
-      dispatch(setUserId(""))
+      dispatch(resetUser())
     }
   });
-
 
   return (
     <HashRouter>
@@ -36,6 +36,7 @@ function FitCoin() {
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/integrations/strava" element={<StravaConnect />} />
           <Route path="/search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:uid" element={<Profile />} />
