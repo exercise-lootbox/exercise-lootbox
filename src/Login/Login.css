@@ -7,14 +7,11 @@
   display: flex;
   background-color: var(--primary-color);
   height: 100vh;
-  width: 200%;
   text-align: center;
   padding-top: 40vh;
 }
 
 .fc-login-form {
-  width: 100%;
-  min-width: 400px;
   height: 100vh;
   padding: 16px;
 }
