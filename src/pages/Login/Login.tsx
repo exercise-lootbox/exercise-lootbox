@@ -7,7 +7,7 @@ import {
 import { FitCoinState } from '../../store';
 import { useSelector } from 'react-redux';
 import './Login.css';
-import '../index.css';
+import '../../index.css';
 import { Navigate } from 'react-router';
 import * as userClient from './userClient';
 import { useDispatch } from 'react-redux';
