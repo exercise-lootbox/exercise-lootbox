@@ -1,4 +1,5 @@
-import { useParams } from "react-router";
+import React from 'react';
+import { useParams } from 'react-router';
 
 function Profile() {
   const { uid } = useParams();
@@ -18,4 +19,4 @@ function Profile() {
   }
 }
 
-export default Profile
+export default Profile;
