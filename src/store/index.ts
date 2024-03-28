@@ -6,6 +6,10 @@ export interface FitCoinState {
     isLoggedIn: boolean;
     authToken: string;
     userId: string;
+    firstName: string;
+    lastName: string;
+    dob: Date | undefined;
+    role: string;
     stravaId: string;
   };
 }
