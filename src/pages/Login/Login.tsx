@@ -7,11 +7,15 @@ import {
 import { FitCoinState } from '../../store';
 import { useSelector } from 'react-redux';
 import './Login.css';
-import '../../index.css';
+import '../index.css';
 import { Navigate } from 'react-router';
+import * as userClient from './userClient';
+import { useDispatch } from 'react-redux';
+import { setUser } from './userReducer';
 
 function Login() {
   const auth = getAuth();
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector(
     (state: FitCoinState) => state.userReducer.isLoggedIn
   );
@@ -29,7 +33,19 @@ function Login() {
   // state once it detects the user has been signed in
   const handleSignIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const authToken = await userCredential.user.getIdToken();
+      const userId = userCredential.user.uid;
+
+      // Grab the user's info from our database
+      const user = await userClient.getUser(userId, authToken);
+
+      // Update user state in Redux
+      dispatch(setUser(user));
     } catch (error: any) {
       console.error('Error signing in:', error.message);
       setIsError(true);
@@ -38,7 +54,23 @@ function Login() {
 
   const handleCreateAccount = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const userId = userCredential.user.uid;
+
+      // Now create the user in our database using their Firebase ID
+      const newUser = await userClient.createUser({
+        _id: userId,
+        firstName: firstName,
+        lastName: lastName,
+        dob: new Date(birthday)
+      });
+
+      // Now set the user state in Redux to be easily accessed throughout the app
+      dispatch(setUser(newUser));
     } catch (error: any) {
       console.error('Error creating account:', error.message);
       setIsError(true);

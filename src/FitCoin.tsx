@@ -8,8 +8,14 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { setAuthToken, setUserId, resetUser } from './pages/Login/userReducer';
+import {
+  setAuthToken,
+  setUserId,
+  setUser,
+  resetUser
+} from './pages/Login/userReducer';
 import StravaConnect from './Integrations/Strava';
+import * as useClient from './pages/Login/userClient';
 
 function FitCoin() {
   const auth = getAuth();
@@ -19,11 +25,18 @@ function FitCoin() {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const token = await user.getIdToken();
+      const userId = user.uid;
       dispatch(setAuthToken(token));
-      dispatch(setUserId(user.uid));
+      dispatch(setUserId(userId));
 
-      // TODO: Make calls to DB here for user info not stored in Firebase
-      // (name, stravaId, etc.)
+      /*Get the user's info from our database.
+      Note: This could fail upon signup due to a race condition,
+      so we fail silently here. In the event of a race condition,
+      Login.tsx will handle updating the user state.*/
+      try {
+        const userDb = await useClient.getUser(userId, token);
+        dispatch(setUser(userDb));
+      } catch {}
     } else {
       dispatch(resetUser());
     }

@@ -4,8 +4,11 @@ const initialState: any = {
   isLoggedIn: false,
   authToken: "",
   userId: "",
+  firstName: "",
+  lastName: "",
+  dob: undefined,
+  role: "USER",
   stravaId: "",
-  // TODO: more user info (name, etc.) once we have DB set up
 };
 
 const userSlice = createSlice({
@@ -16,6 +19,10 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
       state.authToken = "";
       state.userId = "";
+      state.firstName = "";
+      state.lastName = "";
+      state.dob = undefined;
+      state.role = "USER";
       state.stravaId = "";
     },
     setAuthToken: (state, action) => {
@@ -26,13 +33,17 @@ const userSlice = createSlice({
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
-    setStravaId: (state, action) => {
-      state.stravaId = action.payload;
+    setUser: (state, action) => {
+      state.firstName = action.payload.firstName;
+      state.lastName = action.payload.lastName;
+      state.dob = action.payload.dob;
+      state.role = action.payload.role;
+      state.stravaId = action.payload.stravaId;
     },
   },
 });
 
-export const { resetUser, setAuthToken, setUserId, setStravaId } =
+export const { resetUser, setAuthToken, setUserId, setUser } =
   userSlice.actions;
 
 export default userSlice.reducer;
