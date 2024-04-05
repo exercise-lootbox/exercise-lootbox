@@ -28,6 +28,10 @@ function Home() {
       {isLoggedIn &&
         <div>
           <h1>{`Welcome, ${userInfo.firstName} ${userInfo.lastName}!`}</h1>
+          <button className="btn btn-primary">
+            <Link to="/search">Go to Search</Link>
+          </button>
+          <br/>
           <button className="btn btn-danger" onClick={signOutUser}>
             Logout
           </button>
