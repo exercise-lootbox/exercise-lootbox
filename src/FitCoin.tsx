@@ -1,21 +1,21 @@
-import './App.css';
-import { HashRouter } from 'react-router-dom';
-import { Routes, Route, Navigate } from 'react-router';
-import Profile from './pages/Profile';
-import Search from './pages/Search';
-import Details from './pages/Details';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
+import "./App.css";
+import { HashRouter } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router";
+import Profile from "./pages/Profile";
+import Search from "./pages/Search";
+import Details from "./pages/Details";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
 import {
   setAuthToken,
   setUserId,
   setUser,
-  resetUser
-} from './pages/Login/userReducer';
-import StravaConnect from './Integrations/Strava';
-import * as useClient from './pages/Login/userClient';
+  resetUser,
+} from "./pages/Login/userReducer";
+import StravaConnect from "./Integrations/Strava";
+import * as useClient from "./pages/Login/userClient";
 
 function FitCoin() {
   const auth = getAuth();
@@ -46,7 +46,7 @@ function FitCoin() {
     <HashRouter>
       <div>
         <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/integrations/strava" element={<StravaConnect />} />
@@ -54,6 +54,7 @@ function FitCoin() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:uid" element={<Profile />} />
           <Route path="/details/:did" element={<Details />} />
+          <Route path="/#/*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
     </HashRouter>
