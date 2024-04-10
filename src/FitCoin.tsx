@@ -50,6 +50,7 @@ function FitCoin() {
           <Route path="/login" element={<Login />} />
           <Route path="/integrations/strava" element={<StravaConnect />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/search/:criteria" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:uid" element={<Profile />} />
           <Route path="/details/:did" element={<Details />} />

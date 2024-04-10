@@ -1,10 +1,14 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
+import './index.css';
+import { useLocation, useNavigate } from "react-router";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 function Search() {
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const defaultParameters: {[key: string]: string} = {
     "name" : "",
@@ -21,6 +25,26 @@ function Search() {
 
   const [parameters, setParameters] = useState(defaultParameters);
   const [results, setResults] = useState([]);
+
+  // When the search criteria changes, update the parameters and get the results
+  useEffect(() => {
+    // Parse the query parameters from the URL
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams) {
+      const newParameters = { ...parameters };
+      queryParams.forEach((value, key) => {
+        newParameters[key] = value;
+      });
+      setParameters(newParameters);
+      getResults(newParameters);
+    }
+  }, [location.search]);
+
+  // Makes API call to backend to get search results
+  const getResults = async (params: any) => {
+    const response = await axios.get(`${API_BASE}/api/search`, {params: params});
+    setResults(response.data);
+  }
 
   // Handles changes in the search form inputs
   const handleParameterChange = (event: any, parameterName: string) => {
@@ -48,10 +72,15 @@ function Search() {
   }
 
   // Functionality for when search button is pressed
-  const handleSearch = async (event: any) => {
+  const handleSearch = (event: any) => {
     if (verifyParameters()) {
-      const response = await axios.get(`${API_BASE}/api/search`, {params: parameters});
-      setResults(response.data);
+      // Construct the query parameters as a string
+      const queryParams = Object.entries(parameters)
+        .filter(([key, value]) => value !== '')
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&');
+      // Navigate to the urlWithParams using the navigate function
+      navigate({ pathname: '/search', search: queryParams });
     }
   }
 
@@ -115,9 +144,9 @@ function Search() {
   // Components and associated input type for search form
   const components = [
     ["name", "text"], 
-    ["city", "text"], 
-    ["state", "text"], 
-    ["country", "text"], 
+    ["location_city", "text"], 
+    ["location_state", "text"], 
+    ["location_country", "text"], 
     ["min_distance", "number"], 
     ["max_distance", "number"], 
     ["date_before", "date"], 
@@ -126,33 +155,44 @@ function Search() {
 
   return (
     <div>
-      <h1>Search That Shi Up Boiiiii</h1>
-      {components.map((component) => {
-        const labelTitle = component[0].charAt(0).toUpperCase() + component[0].slice(1).replace('_', ' ');
-        const unitsTitle = component[0].includes("distance") ? " (meters)" : "";
-        return (
-          <div>
-            <label htmlFor="searchInput">{labelTitle}{unitsTitle}:</label>
-            <input
-              type={component[1]}
-              id="searchInput"
-              placeholder={`Activity ${labelTitle}`}
-              value={parameters[component[0]]}
-              onChange={(event) => handleParameterChange(event, component[0])}
-            />
-            <br />
-          </div>
-        );
-      })}
-      <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'}/>
-      <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'}/>
-      <br />
-      <button onClick={handleSearch}>Search</button>
-      <ul>
-        {results.map((result) => {
-          return <li>{JSON.stringify(result)}</li>
-        })}
-      </ul>
+      <h1 className="search-header">Search That Shi Up Boiiiii</h1>
+      <div className="search-page">
+        <div className="search-bar">
+          {components.map((component) => {
+            const labelTitle = component[0].charAt(0).toUpperCase() + component[0].slice(1).replace('_', ' ');
+            const unitsTitle = component[0].includes("distance") ? " (meters)" : "";
+            return (
+              <div className="form-input">
+                <label htmlFor="searchInput">{labelTitle}{unitsTitle}</label>
+                <br/>
+                <input
+                  type={component[1]}
+                  id="searchInput"
+                  className="width-220"
+                  placeholder={`Activity ${labelTitle}`}
+                  value={parameters[component[0]]}
+                  onChange={(event) => handleParameterChange(event, component[0])}
+                />
+                <br />
+              </div>
+            );
+          })}
+          <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} currentState={parameters['sport_type']}/>
+          <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} currentState={parameters['trainer']}/>
+          <button className="search-button" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
+        <div className="results-page">
+          {results.map((result) => {
+            return (
+              <div className="result-item">
+                <p>{JSON.stringify(result, null, 2)}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
