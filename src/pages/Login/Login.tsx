@@ -1,33 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from 'firebase/auth';
-import { FitCoinState } from '../../store';
-import { useSelector } from 'react-redux';
-import './Login.css';
-import '../../index.css';
-import { Navigate } from 'react-router';
-import * as userClient from './userClient';
-import { useDispatch } from 'react-redux';
-import { setUser } from './userReducer';
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { FitCoinState } from "../../store";
+import { useSelector } from "react-redux";
+import "./Login.css";
+import "../../index.css";
+import { Navigate } from "react-router";
+import * as userClient from "./userClient";
+import { useDispatch } from "react-redux";
+import { setUser } from "./userReducer";
 
 function Login() {
   const auth = getAuth();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(
-    (state: FitCoinState) => state.userReducer.isLoggedIn
+    (state: FitCoinState) => state.userReducer.isLoggedIn,
   );
   const [isSignIn, setIsSignIn] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [birthday, setBirthday] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [submitButtonEnabled, setSubmitButtonEnabled] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   // The onAuthStateChanged listener should handle updating the user
   // state once it detects the user has been signed in
@@ -36,7 +36,7 @@ function Login() {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const authToken = await userCredential.user.getIdToken();
       const userId = userCredential.user.uid;
@@ -47,7 +47,7 @@ function Login() {
       // Update user state in Redux
       dispatch(setUser(user));
     } catch (error: any) {
-      console.error('Error signing in:', error.message);
+      console.error("Error signing in:", error.message);
       setIsError(true);
     }
   };
@@ -57,7 +57,7 @@ function Login() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const userId = userCredential.user.uid;
 
@@ -66,13 +66,13 @@ function Login() {
         _id: userId,
         firstName: firstName,
         lastName: lastName,
-        dob: new Date(birthday)
+        dob: new Date(birthday),
       });
 
       // Now set the user state in Redux to be easily accessed throughout the app
       dispatch(setUser(newUser));
     } catch (error: any) {
-      console.error('Error creating account:', error.message);
+      console.error("Error creating account:", error.message);
       setIsError(true);
     }
   };
@@ -96,11 +96,11 @@ function Login() {
     setIsError(false);
     if (isSignIn) {
       setErrorMessage(
-        "Invalid username or password. If you don't have an account, click Register above."
+        "Invalid username or password. If you don't have an account, click Register above.",
       );
     } else {
       setErrorMessage(
-        'Error creating account. If you already have an account, click Sign In above.'
+        "Error creating account. If you already have an account, click Sign In above.",
       );
     }
   }, [isSignIn]);
@@ -215,7 +215,7 @@ function Login() {
               className="form-control"
               id="birthday"
               placeholder="Enter birthday"
-              max={new Date().toISOString().split('T')[0]}
+              max={new Date().toISOString().split("T")[0]}
               onChange={(e) => setBirthday(e.target.value)}
             />
           </div>
