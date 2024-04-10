@@ -3,6 +3,7 @@ import { FitCoinState } from "../../store";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./Strava.css";
+import axios from "axios";
 
 function StravaConnect() {
   const isLoggedIn = useSelector(
@@ -12,8 +13,33 @@ function StravaConnect() {
     (state: FitCoinState) => state.userReducer.stravaId,
   );
 
+  const authToken = useSelector(
+    (state: FitCoinState) => state.userReducer.authToken,
+  );
+
   const handleStravaConnect = async () => {
-    window.location.href = "http://localhost:4000/api/strava/login";
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/strava/login",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+
+      const error = response.data.error;
+
+      if (error) {
+        console.error("Error:", error);
+        return;
+      }
+
+      const redirectUrl = response.data.redirectURL;
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (!isLoggedIn) {
