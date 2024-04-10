@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Dropdown = ({ options, onSelect, attributeName }: { options: any, onSelect: any, attributeName: string }) => {
+const Dropdown = ({ options, onSelect, attributeName, currentState }: { options: any, onSelect: any, attributeName: string, currentState: string }) => {
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleSelect = (event : any) => {
@@ -11,9 +11,10 @@ const Dropdown = ({ options, onSelect, attributeName }: { options: any, onSelect
   const labelTitle = attributeName.charAt(0).toUpperCase() + attributeName.slice(1).replace('_', ' ');
 
   return (
-    <div>
-      <label htmlFor="sportTypeDropdown">{labelTitle}:</label>
-      <select id="sportTypeDropdown" value={selectedOption} onChange={(e) => handleSelect(e)}>
+    <div className="form-input">
+      <label htmlFor="sportTypeDropdown">{labelTitle}</label>
+      <br />
+      <select className="width-220" id="sportTypeDropdown" value={selectedOption} onChange={(e) => handleSelect(e)}>
         <option value="">Select an option</option>
         {options.map((option: any, index: any) => {
           const displayName = option.replace(/\B(?=[A-Z])/g, ' ');
