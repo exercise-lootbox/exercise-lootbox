@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from '../pages/Login/userReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "../pages/Login/userReducer";
 
 export interface FitCoinState {
   userReducer: {
@@ -15,8 +15,8 @@ export interface FitCoinState {
 }
 const store = configureStore({
   reducer: {
-    userReducer
-  }
+    userReducer,
+  },
 });
 
 export default store;
