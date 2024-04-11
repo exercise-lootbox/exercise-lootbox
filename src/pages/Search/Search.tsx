@@ -153,6 +153,20 @@ function Search() {
     ["date_after", "date"]
   ]
 
+  const constructLocationString = (city: string, state: string, country: string) => {
+    let locationString = "";
+    if (city) {
+      locationString += city;
+    }
+    if (state) {
+      locationString += city ? `, ${state}` : state;
+    }
+    if (country) {
+      locationString += city || state ? `, ${country}` : country;
+    }
+    return locationString;
+  }
+
   return (
     <div>
       <h1 className="search-header">Search That Shi Up Boiiiii</h1>
@@ -184,10 +198,22 @@ function Search() {
           </button>
         </div>
         <div className="results-page">
-          {results.map((result) => {
+          {results.map((result: any) => {
+            const displayDate = new Date(result.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const displaySportType = result.sport_type.replace(/\B(?=[A-Z])/g, ' ');
+            const displayElapsedTime = new Date(result.elapsed_time * 1000).toISOString().substr(11, 8);
+            const displayTrainer = result.trainer ? "Trainer" : "Not a Trainer";
+            const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
             return (
               <div className="result-item">
-                <p>{JSON.stringify(result, null, 2)}</p>
+                <h2>{result.name}</h2>
+                <p>{displayDate}</p>
+                <p>{displaySportType}</p>
+                <p>{displayElapsedTime}</p>
+                <p>{result.distance} meters</p>
+                <p>{displayTrainer}</p>
+                <p>{result.comment_count} comment{result.comment_count === 1 ? "" : "s"}</p>
+                <p>{displayLocation}</p>
               </div>
             );
           })}

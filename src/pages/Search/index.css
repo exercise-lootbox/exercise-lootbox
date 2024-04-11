@@ -30,7 +30,7 @@
 
 .results-page {
     flex-grow: 1; /* Main content fills the remaining space */
-    padding: 20px; /* Add padding as needed */
+    padding: 10px; /* Add padding as needed */
 }
 
 .result-item {
@@ -38,6 +38,7 @@
     padding: 10px; /* Add padding as needed */
     background-color: #f9f9f9; /* Result item background color */
     border-radius: 5px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add more prominent shadow for depth */
 }
 
 .search-button {
