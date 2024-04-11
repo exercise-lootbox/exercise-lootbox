@@ -3,7 +3,36 @@ import axios from "axios";
 const BASE_API = process.env.REACT_APP_API_BASE;
 const STRAVA_API = `${BASE_API}/api/strava`;
 
-  // TODO: get the user id and at it to the requests
+export interface StravaInfo {
+  _id: string;
+  stravaId: string;
+  accessToken: Date;
+  refreshToken: Date;
+  expiresAt: Date;
+}
+
+export const createStrava = async (
+  strava: StravaInfo,
+  userId: string,
+  authToken: string,
+) => {
+  const config = {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+  const response = await axios.post(`${STRAVA_API}/${userId}`, strava, config);
+  return response.data;
+};
+
+export const getStravaUser = async (userId: string, authToken: string) => {
+  const config = {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+
+  const response = await axios.get(`${STRAVA_API}/${userId}`, config);
+  return response.data;
+};
+
+// TODO: get the user id and at it to the requests
 
 const setRefreshToken = async (userId: string, refreshToken: string) => {
   const body = {

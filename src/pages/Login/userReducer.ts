@@ -33,17 +33,19 @@ const userSlice = createSlice({
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
+    setStravaId: (state, action) => {
+      state.stravaId = action.payload;
+    },
     setUser: (state, action) => {
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
       state.dob = action.payload.dob;
       state.role = action.payload.role;
-      state.stravaId = action.payload.stravaId;
     },
   },
 });
 
-export const { resetUser, setAuthToken, setUserId, setUser } =
+export const { resetUser, setAuthToken, setUserId, setUser, setStravaId } =
   userSlice.actions;
 
 export default userSlice.reducer;

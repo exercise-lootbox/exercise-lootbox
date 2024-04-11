@@ -5,10 +5,13 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { extractTokenParameters } from "../../utils";
 import axios from "axios";
+import * as userClient from "../Login/userClient";
+import { setStravaId } from "../Login/userReducer";
 
 function Home() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: FitCoinState) => state.userReducer);
+  console.log("ui", userInfo);
   // const isLoggedIn = useSelector(
   //   (state: FitCoinState) => state.userReducer.isLoggedIn,
   // );
@@ -30,12 +33,10 @@ function Home() {
       setIsLoading(false);
       if (user) {
         dispatch({
-          type: "LOGIN",
           payload: {
             isLoggedIn: true,
-            firstName: user.displayName?.split(" ")[0] || "",
-            lastName: user.displayName?.split(" ")[1] || "",
           },
+          type: "LOGIN",
         });
       } else {
         dispatch({ type: "LOGOUT" });
@@ -47,12 +48,10 @@ function Home() {
 
   useEffect(() => {
     const postStravaUser = async () => {
-      if (userInfo.isLoggedIn) {
+      if (userInfo.isLoggedIn && userInfo.stravaId === "") {
         const url = window.location.href;
+        if (!url.includes("stravaId")) return;
         const tokenParams = extractTokenParameters(url);
-        console.log(tokenParams);
-        console.log(userInfo.userId);
-        console.log(userInfo.authToken);
         if (
           tokenParams.stravaId &&
           tokenParams.refreshToken &&
@@ -80,11 +79,20 @@ function Home() {
           } catch (error) {
             console.error(error);
           }
+          const stravaId = tokenParams.stravaId;
+          // Now set the user state in Redux to be easily accessed throughout the app
+          dispatch(setStravaId(stravaId));
         }
       }
     };
     postStravaUser();
-  }, [userInfo.authToken, userInfo.isLoggedIn, userInfo.userId]);
+  }, [
+    dispatch,
+    userInfo.authToken,
+    userInfo.isLoggedIn,
+    userInfo.stravaId,
+    userInfo.userId,
+  ]);
 
   if (isLoading) {
     return <div>Loading...</div>;

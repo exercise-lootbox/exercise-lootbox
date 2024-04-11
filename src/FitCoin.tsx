@@ -13,9 +13,11 @@ import {
   setUserId,
   setUser,
   resetUser,
+  setStravaId,
 } from "./pages/Login/userReducer";
 import StravaConnect from "./Integrations/Strava";
 import * as useClient from "./pages/Login/userClient";
+import * as stravaClient from "./strava/stravaClient";
 
 function FitCoin() {
   const auth = getAuth();
@@ -26,8 +28,10 @@ function FitCoin() {
     if (user) {
       const token = await user.getIdToken();
       const userId = user.uid;
+      const strava = await stravaClient.getStravaUser(userId, token);
       dispatch(setAuthToken(token));
       dispatch(setUserId(userId));
+      dispatch(setStravaId(strava.stravaId));
 
       /*Get the user's info from our database.
       Note: This could fail upon signup due to a race condition,
@@ -36,8 +40,10 @@ function FitCoin() {
       try {
         const userDb = await useClient.getUser(userId, token);
         dispatch(setUser(userDb));
+        console.log("User state updated from onAuthStateChanged");
       } catch {}
     } else {
+      console.log("User logged out");
       dispatch(resetUser());
     }
   });
