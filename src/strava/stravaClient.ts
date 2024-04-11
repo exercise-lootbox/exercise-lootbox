@@ -103,4 +103,16 @@ const getAccessToken = async () => {
 };
 
 // const EXPIRATION_DURATION = getExpiresAt(); // 1 hour (Get from MONGODB)
-// const token = getAccessToken();
+const token = getAccessToken();
+
+const headers = {
+  Authorization: `Bearer ${token}`,
+  "Content-Type": "application/json",
+};
+
+// API CALLS
+export const getProfile = async () => {
+  const res = await axios.get("https://api.spotify.com/v3/me", { headers });
+  console.log(res.data);
+  return res;
+};
