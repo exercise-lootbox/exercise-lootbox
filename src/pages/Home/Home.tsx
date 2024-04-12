@@ -5,17 +5,12 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { extractTokenParameters } from "../../utils";
 import axios from "axios";
-import * as userClient from "../Login/userClient";
 import { setStravaId } from "../Login/userReducer";
+import { getActivities } from "../../strava/stravaClient";
 
 function Home() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: FitCoinState) => state.userReducer);
-  console.log("ui", userInfo);
-  // const isLoggedIn = useSelector(
-  //   (state: FitCoinState) => state.userReducer.isLoggedIn,
-  // );
-  const [isLoading, setIsLoading] = useState(true);
 
   const auth = getAuth();
 
@@ -29,24 +24,16 @@ function Home() {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoading(false);
-      if (user) {
-        dispatch({
-          payload: {
-            isLoggedIn: true,
-          },
-          type: "LOGIN",
-        });
-      } else {
-        dispatch({ type: "LOGOUT" });
+    const getUserActivities = async () => {
+      if (userInfo.isLoggedIn && userInfo.stravaId !== "") {
+        try {
+          const response = await getActivities();
+          console.log("res", response);
+        } catch (error) {
+          console.error("errorrr", error);
+        }
       }
-    });
-
-    return () => unsubscribe();
-  }, [auth, dispatch]);
-
-  useEffect(() => {
+    };
     const postStravaUser = async () => {
       if (userInfo.isLoggedIn && userInfo.stravaId === "") {
         const url = window.location.href;
@@ -86,6 +73,7 @@ function Home() {
       }
     };
     postStravaUser();
+    getUserActivities();
   }, [
     dispatch,
     userInfo.authToken,
@@ -93,10 +81,6 @@ function Home() {
     userInfo.stravaId,
     userInfo.userId,
   ]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div>

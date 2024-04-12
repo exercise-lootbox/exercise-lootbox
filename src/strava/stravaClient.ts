@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getUserIdAndAuthToken } from "../utils";
 
 const BASE_API = process.env.REACT_APP_API_BASE;
 const STRAVA_API = `${BASE_API}/api/strava`;
@@ -86,17 +87,30 @@ const refreshAccessToken = async () => {
   }
 };
 
+const { userId, authToken } = getUserIdAndAuthToken();
+console.log("userId", userId);
+console.log("authToken", authToken);
+
 const getAccessToken = async () => {
   try {
-    const response = await fetch("http://localhost:4000/api/strava/token");
-    const data = await response.json();
+    const response = await axios.get(
+      `http://localhost:4000/api/strava/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    console.log("response", response);
 
-    if (data.expires_at < Date.now()) {
-      const newToken = await refreshAccessToken();
-      return newToken;
-    }
-
-    return data.access_token;
+    // if (data.expires_at < Date.now()) {
+    //   console.log("Token expired");
+    //   const newToken = await refreshAccessToken();
+    //   console.log("newToken", newToken);
+    //   return newToken;
+    // }
+    // console.log("data.access_token", data.access_token);
+    // return data.access_token;
   } catch (error) {
     console.error(error);
   }
@@ -111,8 +125,11 @@ const headers = {
 };
 
 // API CALLS
-export const getProfile = async () => {
-  const res = await axios.get("https://api.", { headers });
-  console.log(res.data);
+export const getActivities = async () => {
+  const res = await axios.get(
+    "https://www.strava.com/api/v3/athlete/activities?before=56&after=56&page=1&per_page=15",
+    { headers },
+  );
+  console.log("res", res);
   return res;
 };
