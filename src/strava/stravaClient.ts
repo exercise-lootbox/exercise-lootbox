@@ -112,7 +112,7 @@ const headers = {
 
 // API CALLS
 export const getProfile = async () => {
-  const res = await axios.get("https://api.spotify.com/v3/me", { headers });
+  const res = await axios.get("https://api.", { headers });
   console.log(res.data);
   return res;
 };
