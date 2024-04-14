@@ -44,12 +44,14 @@ function Login() {
 
       // Grab the user's info from our database
       const user = await userClient.getUser(userId, authToken);
-      const stravaData = await getStravaUser(userId, authToken);
+      if (user.stravaId) {
+        const stravaData = await getStravaUser(userId);
+        console.log("sd", stravaData);
+        dispatch(setStravaId(stravaData.stravaId));
+      }
       console.log("u", user);
-      console.log("sd", stravaData);
       // Update user state in Redux
       dispatch(setUser(user));
-      dispatch(setStravaId(stravaData.stravaId));
     } catch (error: any) {
       console.error("Error signing in:", error.message);
       setIsError(true);

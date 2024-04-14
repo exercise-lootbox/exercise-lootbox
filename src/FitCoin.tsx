@@ -18,6 +18,7 @@ import {
 import StravaConnect from "./Integrations/Strava";
 import * as useClient from "./pages/Login/userClient";
 import * as stravaClient from "./strava/stravaClient";
+import UserProfile from "./pages/Profile/UserProfile";
 
 function FitCoin() {
   const auth = getAuth();
@@ -28,10 +29,8 @@ function FitCoin() {
     if (user) {
       const token = await user.getIdToken();
       const userId = user.uid;
-      const strava = await stravaClient.getStravaUser(userId, token);
       dispatch(setAuthToken(token));
       dispatch(setUserId(userId));
-      dispatch(setStravaId(strava.stravaId));
 
       /*Get the user's info from our database.
       Note: This could fail upon signup due to a race condition,
@@ -40,7 +39,10 @@ function FitCoin() {
       try {
         const userDb = await useClient.getUser(userId, token);
         dispatch(setUser(userDb));
-        console.log("User state updated from onAuthStateChanged");
+        if (userDb.stravaId) {
+          const strava = await stravaClient.getStravaUser(userId);
+          dispatch(setStravaId(strava.stravaId));
+        }
       } catch {}
     } else {
       console.log("User logged out");
@@ -58,7 +60,7 @@ function FitCoin() {
           <Route path="/integrations/strava" element={<StravaConnect />} />
           <Route path="/search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/:uid" element={<Profile />} />
+          <Route path="/profile/:uid" element={<UserProfile />} />
           <Route path="/details/:did" element={<Details />} />
           <Route path="/#/*" element={<Navigate to="/home" />} />
         </Routes>

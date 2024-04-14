@@ -1,11 +1,23 @@
+import firebase from "firebase/auth";
 import store from "../store";
 
-export function getUserIdAndAuthToken() {
+export function getHashParams() {
+  const hashParams: any = {};
+  let e;
+  const r = /([^&;=]+)=?([^&;]*)/g;
+  const q = window.location.hash.substring(1);
+  while ((e = r.exec(q))) {
+    hashParams[e[1]] = decodeURIComponent(e[2]);
+  }
+  return hashParams;
+}
+
+export async function getUserIdAndAuthToken() {
+  // const authToken = await firebase.auth().currentUser.getIdToken()
+  //Test
   const state = store.getState();
   console.log("state", state);
-  const userId = state.userReducer;
-  console.log("userId", userId);
-  const authToken = state.userReducer.authToken;
+  const { userId, authToken } = state.userReducer; // Accessing userReducer key
   return { userId, authToken };
 }
 
