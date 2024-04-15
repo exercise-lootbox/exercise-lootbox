@@ -14,7 +14,9 @@ code {
 
 /* Can change these later */
 :root {
-  --primary-color: #3AD4B8;
-  --secondary-color: #8E86E5;
-  --accent-color: #A968DE;
+  --primary-color: #3ad4b8;
+  --secondary-color: #8e86e5;
+  --accent-color: #a968de;
+  --strava-color: #fc4c02;
+  --strava-color-highlight: #fb560f;
 }

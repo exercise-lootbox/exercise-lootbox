@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { FitCoinState } from "../store";
+import { FitCoinState } from "../../store";
 import { useSelector } from "react-redux";
 import { getAuth, signOut } from 'firebase/auth';
 
 function Home() {
   const userInfo = useSelector((state: FitCoinState) => state.userReducer);
   const isLoggedIn = useSelector((state: FitCoinState) => state.userReducer.isLoggedIn);
-
+  const stravaId = useSelector((state: FitCoinState) => state.userReducer.stravaId);
   const auth = getAuth();
 
   const signOutUser = async () => {
@@ -28,6 +28,7 @@ function Home() {
       {isLoggedIn &&
         <div>
           <h1>{`Welcome, ${userInfo.firstName} ${userInfo.lastName}!`}</h1>
+          {(stravaId !== "") && <h2>{`Connected to Strava! StravaID = ${stravaId}`}</h2>}
           <button className="btn btn-danger" onClick={signOutUser}>
             Logout
           </button>
