@@ -9,6 +9,9 @@ const initialState: any = {
   dob: undefined,
   role: "USER",
   stravaId: "",
+  accessToken: "",
+  refreshToken: "",
+  expiresAt: 0,
 };
 
 const userSlice = createSlice({
@@ -42,10 +45,21 @@ const userSlice = createSlice({
       state.dob = action.payload.dob;
       state.role = action.payload.role;
     },
+    setStravaData: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.expiresAt = action.payload.expiresAt;
+    },
   },
 });
 
-export const { resetUser, setAuthToken, setUserId, setUser, setStravaId } =
-  userSlice.actions;
+export const {
+  resetUser,
+  setAuthToken,
+  setUserId,
+  setUser,
+  setStravaId,
+  setStravaData,
+} = userSlice.actions;
 
 export default userSlice.reducer;

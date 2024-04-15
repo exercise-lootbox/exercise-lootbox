@@ -11,7 +11,7 @@ import "../../index.css";
 import { Navigate } from "react-router";
 import * as userClient from "./userClient";
 import { useDispatch } from "react-redux";
-import { setStravaId, setUser } from "./userReducer";
+import { setStravaData, setStravaId, setUser } from "./userReducer";
 import { getStravaUser } from "../../strava/stravaClient";
 
 function Login() {
@@ -45,11 +45,10 @@ function Login() {
       // Grab the user's info from our database
       const user = await userClient.getUser(userId, authToken);
       if (user.stravaId) {
-        const stravaData = await getStravaUser(userId);
-        console.log("sd", stravaData);
-        dispatch(setStravaId(stravaData.stravaId));
+        const strava = await getStravaUser(userId, authToken);
+        dispatch(setStravaData(strava));
+        dispatch(setStravaId(strava.stravaId));
       }
-      console.log("u", user);
       // Update user state in Redux
       dispatch(setUser(user));
     } catch (error: any) {

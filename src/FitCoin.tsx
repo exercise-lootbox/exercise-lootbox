@@ -14,9 +14,10 @@ import {
   setUser,
   resetUser,
   setStravaId,
+  setStravaData,
 } from "./pages/Login/userReducer";
 import StravaConnect from "./Integrations/Strava";
-import * as useClient from "./pages/Login/userClient";
+import * as userClient from "./pages/Login/userClient";
 import * as stravaClient from "./strava/stravaClient";
 import UserProfile from "./pages/Profile/UserProfile";
 
@@ -37,13 +38,16 @@ function FitCoin() {
       so we fail silently here. In the event of a race condition,
       Login.tsx will handle updating the user state.*/
       try {
-        const userDb = await useClient.getUser(userId, token);
+        const userDb = await userClient.getUser(userId, token);
         dispatch(setUser(userDb));
         if (userDb.stravaId) {
-          const strava = await stravaClient.getStravaUser(userId);
-          dispatch(setStravaId(strava.stravaId));
+          const strava = await stravaClient.getStravaUser(userId, token);
+          dispatch(setStravaData(strava));
+          dispatch(setStravaId(userDb.stravaId));
         }
-      } catch {}
+      } catch {
+        console.error("User not found in database");
+      }
     } else {
       console.log("User logged out");
       dispatch(resetUser());

@@ -23,3 +23,15 @@ export const getUser = async (id: string, authToken: string) => {
   const response = await axios.get(`${USERS_API}/${id}`, config);
   return response.data;
 };
+
+export const updateStravaId = async (
+  id: string,
+  stravaId: string,
+  authToken: string,
+) => {
+  const config = {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+  const response = await axios.put(`${USERS_API}/${id}`, { stravaId }, config);
+  return response.data;
+};

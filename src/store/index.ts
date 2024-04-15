@@ -11,6 +11,9 @@ export interface FitCoinState {
     dob: Date | undefined;
     role: string;
     stravaId: string;
+    accessToken: string;
+    refreshToken: string;
+    expiresAt: number;
   };
 }
 const store = configureStore({
