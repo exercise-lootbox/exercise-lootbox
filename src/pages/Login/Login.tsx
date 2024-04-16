@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { FitCoinState } from "../store";
+import { FitCoinState } from "../../store";
 import { useSelector } from "react-redux";
 import "./Login.css";
-import "../index.css"
+import "../../index.css"
 import { Navigate } from 'react-router';
 import * as userClient from "./userClient";
 import { useDispatch } from 'react-redux';
@@ -156,8 +156,10 @@ function Login() {
   }
 
   // Redirect the user to connect their Strava account
-  if (isLoggedIn) {
+  if (isLoggedIn && !isSignIn) {
     return <Navigate to="/integrations/strava" replace />
+  } else if (isLoggedIn) {
+    return <Navigate to="/home" replace />
   }
 
   return (

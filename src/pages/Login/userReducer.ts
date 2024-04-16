@@ -40,10 +40,13 @@ const userSlice = createSlice({
       state.role = action.payload.role;
       state.stravaId = action.payload.stravaId;
     },
+    setStravaId: (state, action) => {
+      state.stravaId = action.payload;
+    },
   },
 });
 
-export const { resetUser, setAuthToken, setUserId, setUser } =
+export const { resetUser, setAuthToken, setUserId, setUser, setStravaId } =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "../Login/userReducer";
+import userReducer from "../pages/Login/userReducer";
 
 export interface FitCoinState {
   userReducer: {
