@@ -1,0 +1,42 @@
+.navigation {
+  background-color: var(--primary-color);
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  width: var(--nav-bar-width);
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  box-shadow: 1px 0 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.navigation li {
+  padding: 10px;
+  font-size: 0.8em;
+  text-align: center;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 16px;
+  margin-bottom: 8px;
+  margin-top: 4px;
+}
+
+.navigation li.nav-active {
+  background-color: white;
+}
+
+.navigation-icon {
+  color: var(--accent-color);
+}
+
+.navigation-pill {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navigation-nav-label {
+  color: var(--accent-color);
+  font-weight: bold;
+  margin-left: 8px;
+}

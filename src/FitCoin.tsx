@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import './App.css';
 import { HashRouter } from "react-router-dom";
 import { Routes, Route, Navigate } from "react-router"
@@ -12,11 +13,17 @@ import { setAuthToken, setUserId, setUser, resetUser } from './pages/Login/userR
 import StravaConnect from './Integrations/Strava';
 import * as userClient from './pages/Login/userClient';
 import StravaRedirect from './Integrations/Strava/StravaRedirect';
+import NavBar from './pages/Navigation';
+import "./FitCoin.css"
+import { FaBars } from 'react-icons/fa';
+import { useState } from 'react';
+import useWindowGrew from './pages/Navigation/useWindowGrew';
 
 
 function FitCoin() {
   const auth = getAuth();
   const dispatch = useDispatch();
+  const [collapsedMenuOpen, setCollapsedMenuOpen] = useState(false);
 
   // Listen for auth state changes throughout entire app
   onAuthStateChanged(auth, async (user) => {
@@ -39,20 +46,40 @@ function FitCoin() {
     }
   });
 
+  // Handles closing the collapsed menu when the window resizes
+  useWindowGrew(() => { setCollapsedMenuOpen(false) })
+
   return (
     <HashRouter>
-      <div>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/integrations/strava" element={<StravaConnect />} />
-          <Route path="/integrations/strava/redirect" element={<StravaRedirect />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/:uid" element={<Profile />} />
-          <Route path="/details/:did" element={<Details />} />
-        </Routes>
+
+      <div className="d-flex">
+        <div className="d-none d-md-block">
+          <NavBar closeAction={undefined} />
+        </div>
+        <div className={`${collapsedMenuOpen ? "d-block" : "d-none"}`}>
+          <NavBar closeAction={() => setCollapsedMenuOpen(false)} />
+        </div>
+        <div className="d-none d-md-block navbar-offset"></div>
+        <div>
+          <div className="collapsed-navbar d-md-none">
+            <button className="icon-button-accent" onClick={() => setCollapsedMenuOpen(!collapsedMenuOpen)}>
+              <FaBars className="fs-3 ms-2" />
+            </button>
+          </div>
+          <div className="ms-2">
+            <Routes>
+              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/integrations/strava" element={<StravaConnect />} />
+              <Route path="/integrations/strava/redirect" element={<StravaRedirect />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:uid" element={<Profile />} />
+              <Route path="/details/:did" element={<Details />} />
+            </Routes>
+          </div>
+        </div>
       </div>
     </HashRouter>
   );
