@@ -19,7 +19,6 @@ import { FaBars } from 'react-icons/fa';
 import { useState } from 'react';
 import useWindowGrew from './pages/Navigation/useWindowGrew';
 
-
 function FitCoin() {
   const auth = getAuth();
   const dispatch = useDispatch();
@@ -49,9 +48,22 @@ function FitCoin() {
   // Handles closing the collapsed menu when the window resizes
   useWindowGrew(() => { setCollapsedMenuOpen(false) })
 
+  function routes() {
+    return <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/integrations/strava" element={<StravaConnect />} />
+      <Route path="/integrations/strava/redirect" element={<StravaRedirect />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:uid" element={<Profile />} />
+      <Route path="/details/:did" element={<Details />} />
+    </Routes>
+  }
+
   return (
     <HashRouter>
-
       <div className="d-flex">
         <div className="d-none d-md-block">
           <NavBar closeAction={undefined} />
@@ -66,18 +78,11 @@ function FitCoin() {
               <FaBars className="fs-3 ms-2" />
             </button>
           </div>
-          <div className="ms-2">
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/integrations/strava" element={<StravaConnect />} />
-              <Route path="/integrations/strava/redirect" element={<StravaRedirect />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/:uid" element={<Profile />} />
-              <Route path="/details/:did" element={<Details />} />
-            </Routes>
+          <div className="ms-2 me-2 fitcoin-content d-none d-md-block">
+            {routes()}
+          </div>
+          <div className="ms-2 me-2 d-md-none">
+            {routes()}
           </div>
         </div>
       </div>

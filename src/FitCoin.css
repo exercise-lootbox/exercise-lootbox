@@ -18,3 +18,7 @@
   padding: 0;
   color: var(--accent-color);
 }
+
+.fitcoin-content {
+  width: calc(100vw - calc(var(--nav-bar-width) + 30px));
+}

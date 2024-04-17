@@ -21,3 +21,8 @@ code {
   --strava-color-highlight: #fb560f;
   --nav-bar-width: 200px;
 }
+
+.header-text {
+  font-weight: 700;
+  color: var(--primary-color);
+}
