@@ -19,7 +19,6 @@ function StravaRedirect() {
   useEffect(() => {
     const fetchStravaId = async () => {
       try {
-        console.log("Got here!")
         const response = await stravaClient.getStravaId(userId, authToken);
         const stravaId = response.stravaId;
         dispatch(setStravaId(stravaId));

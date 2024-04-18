@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import './App.css';
-import { HashRouter } from "react-router-dom";
 import { Routes, Route, Navigate } from "react-router"
 import Profile from './pages/Profile';
 import Search from './pages/Search';
@@ -16,13 +15,16 @@ import StravaRedirect from './Integrations/Strava/StravaRedirect';
 import NavBar from './pages/Navigation';
 import "./FitCoin.css"
 import { FaBars } from 'react-icons/fa';
-import { useState } from 'react';
-import useWindowGrew from './pages/Navigation/useWindowGrew';
+import { useState, useEffect } from 'react';
+import useWindowGrew from './hooks/useWindowGrew';
+import { useLocation } from 'react-router-dom';
 
 function FitCoin() {
   const auth = getAuth();
   const dispatch = useDispatch();
   const [collapsedMenuOpen, setCollapsedMenuOpen] = useState(false);
+  const location = useLocation();
+  const [isOnLogin, setIsOnLogin] = useState(false);
 
   // Listen for auth state changes throughout entire app
   onAuthStateChanged(auth, async (user) => {
@@ -48,6 +50,11 @@ function FitCoin() {
   // Handles closing the collapsed menu when the window resizes
   useWindowGrew(() => { setCollapsedMenuOpen(false) })
 
+  // Used to handle hiding the navbar on the login page
+  useEffect(() => {
+    setIsOnLogin(location.pathname.includes("/login") || location.pathname.includes("/integrations"));
+  }, [location])
+
   function routes() {
     return <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
@@ -63,30 +70,28 @@ function FitCoin() {
   }
 
   return (
-    <HashRouter>
-      <div className="d-flex">
-        <div className="d-none d-md-block">
-          <NavBar closeAction={undefined} />
+    <div className="d-flex">
+      <div className={`d-none ${isOnLogin ? "" : "d-md-block"}`}>
+        <NavBar closeAction={undefined} />
+      </div>
+      <div className={`${collapsedMenuOpen ? "d-block" : "d-none"}`}>
+        <NavBar closeAction={() => setCollapsedMenuOpen(false)} />
+      </div>
+      <div className={`d-none ${isOnLogin ? "" : "d-md-block navbar-offset"}`}></div>
+      <div>
+        <div className={`${isOnLogin ? "d-none" : "collapsed-navbar d-md-none"}`}>
+          <button className="icon-button-accent" onClick={() => setCollapsedMenuOpen(!collapsedMenuOpen)}>
+            <FaBars className="fs-3 ms-2" />
+          </button>
         </div>
-        <div className={`${collapsedMenuOpen ? "d-block" : "d-none"}`}>
-          <NavBar closeAction={() => setCollapsedMenuOpen(false)} />
+        <div className={`${isOnLogin ? "fitcoin-content-login" : "ms-2 me-2 fitcoin-content d-none d-md-block"}`}>
+          {routes()}
         </div>
-        <div className="d-none d-md-block navbar-offset"></div>
-        <div>
-          <div className="collapsed-navbar d-md-none">
-            <button className="icon-button-accent" onClick={() => setCollapsedMenuOpen(!collapsedMenuOpen)}>
-              <FaBars className="fs-3 ms-2" />
-            </button>
-          </div>
-          <div className="ms-2 me-2 fitcoin-content d-none d-md-block">
-            {routes()}
-          </div>
-          <div className="ms-2 me-2 d-md-none">
-            {routes()}
-          </div>
+        <div className="ms-2 me-2 d-md-none">
+          {routes()}
         </div>
       </div>
-    </HashRouter>
+    </div>
   );
 }
 

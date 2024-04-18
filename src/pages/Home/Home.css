@@ -21,6 +21,13 @@
   color: var(--accent-color);
 }
 
+.sample-data-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+
 .activity-title-coins {
   font-weight: bold;
   color: var(--primary-color);
@@ -37,4 +44,15 @@
 
 .strava-summary {
   text-align: center;
+}
+
+.login-button {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 30px;
+  border: none;
+  text-align: center;
+  padding: 10px 20px;
+  font-weight: bold;
+  margin-top: 200px;
 }

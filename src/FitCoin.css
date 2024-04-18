@@ -22,3 +22,7 @@
 .fitcoin-content {
   width: calc(100vw - calc(var(--nav-bar-width) + 30px));
 }
+
+.fitcoin-content-login {
+  width: 100vw;
+}
