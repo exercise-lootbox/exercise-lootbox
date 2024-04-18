@@ -3,6 +3,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import FitCoin from './FitCoin';
 import { initializeApp } from "firebase/app";
+import { HashRouter } from 'react-router-dom';
 
 // Connect to Firebase
 const firebaseConfig = {
@@ -19,7 +20,9 @@ initializeApp(firebaseConfig);
 function App() {
   return (
     <Provider store={store}>
-      <FitCoin />
+      <HashRouter>
+        <FitCoin />
+      </HashRouter>
     </Provider>
   );
 }

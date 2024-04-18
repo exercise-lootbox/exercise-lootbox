@@ -9,10 +9,11 @@ function StravaConnect() {
   const isLoggedIn = useSelector((state: FitCoinState) => state.userReducer.isLoggedIn);
   const stravaId = useSelector((state: FitCoinState) => state.userReducer.stravaId);
   const userId = useSelector((state: FitCoinState) => state.userReducer.userId);
+  const authToken = useSelector((state: FitCoinState) => state.userReducer.authToken);
 
   const handleStravaConnect = async () => {
     try {
-      const response: any = await stravaClient.connectToStrava(userId);
+      const response: any = await stravaClient.connectToStrava(userId, authToken);
 
       // Redirect to Strava's OAuth page
       const redirectUrl = response.redirectURL;

@@ -19,4 +19,10 @@ code {
   --accent-color: #a968de;
   --strava-color: #fc4c02;
   --strava-color-highlight: #fb560f;
+  --nav-bar-width: 200px;
+}
+
+.header-text {
+  font-weight: 700;
+  color: var(--primary-color);
 }

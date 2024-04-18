@@ -12,14 +12,14 @@ import { useEffect } from "react";
 function StravaRedirect() {
   const stravaId = useSelector((state: FitCoinState) => state.userReducer.stravaId);
   const userId = useSelector((state: FitCoinState) => state.userReducer.userId);
+  const authToken = useSelector((state: FitCoinState) => state.userReducer.authToken);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchStravaId = async () => {
       try {
-        console.log("Got here!")
-        const response = await stravaClient.connectToStrava(userId);
+        const response = await stravaClient.getStravaId(userId, authToken);
         const stravaId = response.stravaId;
         dispatch(setStravaId(stravaId));
       } catch {
@@ -29,7 +29,7 @@ function StravaRedirect() {
     }
 
     fetchStravaId();
-  }, [dispatch, navigate, userId]);
+  }, [authToken, dispatch, navigate, userId]);
 
 
   if (stravaId !== "") {
