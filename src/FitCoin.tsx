@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import './App.css';
 import { Routes, Route, Navigate } from "react-router"
 import Profile from './pages/Profile';
