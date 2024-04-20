@@ -126,35 +126,6 @@ function Search() {
 
   return (
     <div>
-<<<<<<< HEAD
-      <h1>Search That Shi Up Boiiiii</h1>
-      {components.map((component) => {
-        const labelTitle = component[0].charAt(0).toUpperCase() + component[0].slice(1).replace('_', ' ');
-        const unitsTitle = component[0].includes("distance") ? " (meters)" : "";
-        return (
-          <div>
-            <label htmlFor="searchInput">{labelTitle}{unitsTitle}:</label>
-            <input
-              type={component[1]}
-              id="searchInput"
-              placeholder={`Activity ${labelTitle}`}
-              value={parameters[component[0]]}
-              onChange={(event) => handleParameterChange(event, component[0])}
-            />
-            <br />
-          </div>
-        );
-      })}
-      <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'}/>
-      <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'}/>
-      <br />
-      <button onClick={handleSearch}>Search</button>
-      <ul>
-        {results.map((result) => {
-          return <li>{JSON.stringify(result)}</li>
-        })}
-      </ul>
-=======
       <h1 className="search-header">Search That Shi Up Boiiiii</h1>
       <div className="search-page">
         <div className="search-bar">
@@ -177,8 +148,8 @@ function Search() {
               </div>
             );
           })}
-          <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} currentState={parameters['sport_type']}/>
-          <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} currentState={parameters['trainer']}/>
+          <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} />
+          <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} />
           <button className="search-button" onClick={handleSearch}>
             Search
           </button>
@@ -193,7 +164,6 @@ function Search() {
           })}
         </div>
       </div>
->>>>>>> parent of 0b14ed8 (Fixed styling of items (not done))
     </div>
   );
 }
