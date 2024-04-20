@@ -1,0 +1,22 @@
+.fc-login-container {
+  display: flex;
+  align-items: center;
+}
+
+.fc-login-background {
+  display: flex;
+  background-color: var(--primary-color);
+  height: 100vh;
+  text-align: center;
+  padding-top: 40vh;
+}
+
+.fc-login-form {
+  height: 100vh;
+  padding: 16px;
+}
+
+.fc-login-form-title {
+  display: flex;
+  justify-content: center;
+}
