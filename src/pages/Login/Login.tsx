@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { FitCoinState } from "../store";
-import { useSelector } from "react-redux";
 import "./Login.css";
-import "../index.css"
-import { Navigate } from 'react-router';
+import "../../index.css"
 import * as userClient from "./userClient";
 import { useDispatch } from 'react-redux';
 import { setUser } from './userReducer';
+import { useNavigate } from 'react-router';
 
 function Login() {
   const auth = getAuth()
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state: FitCoinState) => state.userReducer.isLoggedIn);
   const [isSignIn, setIsSignIn] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +19,7 @@ function Login() {
   const [submitButtonEnabled, setSubmitButtonEnabled] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   // The onAuthStateChanged listener should handle updating the user
   // state once it detects the user has been signed in
@@ -36,7 +34,7 @@ function Login() {
 
       // Update user state in Redux
       dispatch(setUser(user));
-
+      navigate("/home", { replace: true })
     } catch (error: any) {
       console.error("Error signing in:", error.message);
       setIsError(true);
@@ -58,7 +56,7 @@ function Login() {
 
       // Now set the user state in Redux to be easily accessed throughout the app
       dispatch(setUser(newUser));
-
+      navigate("/integrations/strava", { replace: true });
     } catch (error: any) {
       console.error("Error creating account:", error.message);
       setIsError(true);
@@ -153,11 +151,6 @@ function Login() {
             <button className="btn btn-link btn-sm pb-2" onClick={() => setIsSignIn(true)}>Sign in</button></p>
         </div>
       </div>);
-  }
-
-  // Redirect the user to connect their Strava account
-  if (isLoggedIn) {
-    return <Navigate to="/integrations/strava" replace />
   }
 
   return (

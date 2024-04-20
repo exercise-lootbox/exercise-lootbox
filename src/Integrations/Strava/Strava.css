@@ -1,0 +1,57 @@
+.strava-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.strava-header {
+  letter-spacing: -0.025em;
+  margin: 0px 0px 10px;
+  font-weight: 900;
+  font-size: 32px;
+}
+
+.btn-strava {
+  background-color: var(--strava-color);
+  color: rgb(255, 255, 255);
+  border-radius: 30px;
+  padding: 17px 35px;
+  min-width: 180px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.btn-strava:hover {
+  background-color: var(--strava-color-highlight);
+  cursor: pointer;
+}
+
+.or {
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.or a {
+  color: var(--strava-color);
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+.or a:hover {
+  text-decoration: underline;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}

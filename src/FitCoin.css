@@ -1,0 +1,28 @@
+.navbar-offset {
+  position: relative;
+  width: var(--nav-bar-width);
+}
+
+.collapsed-navbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  padding-bottom: 4px;
+  width: 100vw;
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.icon-button-accent {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-color);
+}
+
+.fitcoin-content {
+  width: calc(100vw - calc(var(--nav-bar-width) + 30px));
+}
+
+.fitcoin-content-login {
+  width: 100vw;
+}
