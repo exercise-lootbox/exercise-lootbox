@@ -63,12 +63,13 @@ function Details() {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const activity = await client.getStravaActivity(stravaId, authToken, did || "");
-      console.log(activity);
-      setDetails(activity);
+      if (stravaId !== "" && authToken !== "") {
+        const activity = await client.getStravaActivity(stravaId, authToken, did || "");
+        setDetails(activity);
+      }
     }
     fetchDetails();
-  }, []);
+  }, [stravaId, authToken, did]);
 
   return (
     <div>

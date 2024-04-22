@@ -13,13 +13,6 @@ function Search() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const userInfo = useSelector((state: FitCoinState) => state.userReducer);
-  const isLoggedIn = useSelector(
-    (state: FitCoinState) => state.userReducer.isLoggedIn,
-  );
-  const authToken = useSelector(
-    (state: FitCoinState) => state.userReducer.authToken,
-  );
   const stravaId = useSelector(
     (state: FitCoinState) => state.userReducer.stravaId,
   );
@@ -45,7 +38,7 @@ function Search() {
   useEffect(() => {
     // Parse the query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
-    if (queryParams) {
+    if (queryParams && stravaId) {
       const newParameters = { ...parameters };
       queryParams.forEach((value, key) => {
         newParameters[key] = value;
@@ -53,11 +46,13 @@ function Search() {
       setParameters(newParameters);
       getResults(newParameters);
     }
-  }, [location.search]);
+  }, [location.search, stravaId]);
 
   // Makes API call to backend to get search results
   const getResults = async (params: any) => {
-    params["stravaId"] = stravaId;
+    if (params['stravaId'] === "") {
+      params['stravaId'] = stravaId;
+    }
     const response = await axios.get(`${API_BASE}/api/search`, {params: params});
     setResults(response.data);
   }
