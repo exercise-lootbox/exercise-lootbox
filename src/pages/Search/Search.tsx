@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import './index.css';
 import { useLocation, useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { FitCoinState } from "../../store";
+import * as stravaClient from "../../Integrations/Strava/stravaClient";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
@@ -10,7 +13,19 @@ function Search() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const userInfo = useSelector((state: FitCoinState) => state.userReducer);
+  const isLoggedIn = useSelector(
+    (state: FitCoinState) => state.userReducer.isLoggedIn,
+  );
+  const authToken = useSelector(
+    (state: FitCoinState) => state.userReducer.authToken,
+  );
+  const stravaId = useSelector(
+    (state: FitCoinState) => state.userReducer.stravaId,
+  );
+
   const defaultParameters: {[key: string]: string} = {
+    "stravaId" : "",
     "name" : "",
     "location_city" : "",
     "location_state" : "",
@@ -42,6 +57,7 @@ function Search() {
 
   // Makes API call to backend to get search results
   const getResults = async (params: any) => {
+    params["stravaId"] = stravaId;
     const response = await axios.get(`${API_BASE}/api/search`, {params: params});
     setResults(response.data);
   }
@@ -167,6 +183,10 @@ function Search() {
     return locationString;
   }
 
+  const eventDetails = (resultId : string) => {
+    navigate(`/details/${resultId}`);
+  }
+
   return (
     <div>
       <h1 className="search-header">Search That Shi Up Boiiiii</h1>
@@ -205,7 +225,7 @@ function Search() {
             const displayTrainer = result.trainer ? "Trainer" : "Not a Trainer";
             const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
             return (
-              <div className="result-item">
+              <div className="result-item" onClick={() => eventDetails(result.id)}>
                 <h2>{result.name}</h2>
                 <p>{displayDate}</p>
                 <p>{displaySportType}</p>
