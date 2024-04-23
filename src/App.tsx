@@ -1,9 +1,14 @@
-import './App.css';
-import store from "./store";
+import "./App.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
-import FitCoin from './FitCoin';
+import FitCoin from "./FitCoin";
 import { initializeApp } from "firebase/app";
-import { HashRouter } from 'react-router-dom';
+import { HashRouter } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
+import configStore from "./store/configureStore";
+
+const { persistor, store } = configStore();
 
 // Connect to Firebase
 const firebaseConfig = {
@@ -12,7 +17,7 @@ const firebaseConfig = {
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 initializeApp(firebaseConfig);
@@ -20,9 +25,12 @@ initializeApp(firebaseConfig);
 function App() {
   return (
     <Provider store={store}>
-      <HashRouter>
-        <FitCoin />
-      </HashRouter>
+      <PersistGate loading={null} persistor={persistor}>
+        <HashRouter>
+          <FitCoin />
+          <ToastContainer />
+        </HashRouter>
+      </PersistGate>
     </Provider>
   );
 }

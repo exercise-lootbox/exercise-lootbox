@@ -10,16 +10,32 @@ export interface UserInfo {
   dob: Date;
 }
 
+const config = (authToken: string) => {
+  return {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+};
+
 export const createUser = async (user: UserInfo) => {
   const response = await axios.post(`${USERS_API}`, user);
   return response.data;
 };
 
 export const getUser = async (id: string, authToken: string) => {
-  const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
-  };
+  const response = await axios.get(`${USERS_API}/${id}`, config(authToken));
+  return response.data;
+};
 
-  const response = await axios.get(`${USERS_API}/${id}`, config);
+export const buyItem = async (
+  uid: string,
+  authToken: string,
+  coins: number,
+  itemId: string,
+) => {
+  const response = await axios.post(
+    `${USERS_API}/buy/${uid}`,
+    { itemId, coins },
+    config(authToken),
+  );
   return response.data;
 };

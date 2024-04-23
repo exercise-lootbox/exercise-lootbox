@@ -1,0 +1,19 @@
+.coins {
+  display: flex;
+  width: fit-content;
+  padding: 1px 10px;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border-radius: 25%;
+  border: 2px solid #000;
+  background-color: var(--primary-color);
+}
+
+.coins-text {
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 1.6rem;
+  margin: 0;
+}

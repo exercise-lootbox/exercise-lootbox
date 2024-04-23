@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FitCoinState } from "../../store";
+import { FitCoinState } from "../../store/configureStore";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import "./Home.css";
@@ -8,15 +8,15 @@ import * as stravaClient from "../../Integrations/Strava/stravaClient";
 import { FaStrava } from "react-icons/fa";
 
 function Home() {
-  const userInfo = useSelector((state: FitCoinState) => state.userReducer);
+  const userInfo = useSelector((state: FitCoinState) => state.persistedReducer);
   const isLoggedIn = useSelector(
-    (state: FitCoinState) => state.userReducer.isLoggedIn,
+    (state: FitCoinState) => state.persistedReducer.isLoggedIn,
   );
   const authToken = useSelector(
-    (state: FitCoinState) => state.userReducer.authToken,
+    (state: FitCoinState) => state.persistedReducer.authToken,
   );
   const stravaId = useSelector(
-    (state: FitCoinState) => state.userReducer.stravaId,
+    (state: FitCoinState) => state.persistedReducer.stravaId,
   );
   const [recentStravaData, setRecentStravaData] = useState<any>({
     recentActivities: [],

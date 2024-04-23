@@ -1,19 +1,30 @@
 import { Navigate } from "react-router";
-import { FitCoinState } from "../../store";
+import { FitCoinState } from "../../store/configureStore";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./Strava.css";
 import * as stravaClient from "./stravaClient";
 
 function StravaConnect() {
-  const isLoggedIn = useSelector((state: FitCoinState) => state.userReducer.isLoggedIn);
-  const stravaId = useSelector((state: FitCoinState) => state.userReducer.stravaId);
-  const userId = useSelector((state: FitCoinState) => state.userReducer.userId);
-  const authToken = useSelector((state: FitCoinState) => state.userReducer.authToken);
+  const isLoggedIn = useSelector(
+    (state: FitCoinState) => state.persistedReducer.isLoggedIn,
+  );
+  const stravaId = useSelector(
+    (state: FitCoinState) => state.persistedReducer.stravaId,
+  );
+  const userId = useSelector(
+    (state: FitCoinState) => state.persistedReducer.userId,
+  );
+  const authToken = useSelector(
+    (state: FitCoinState) => state.persistedReducer.authToken,
+  );
 
   const handleStravaConnect = async () => {
     try {
-      const response: any = await stravaClient.connectToStrava(userId, authToken);
+      const response: any = await stravaClient.connectToStrava(
+        userId,
+        authToken,
+      );
 
       // Redirect to Strava's OAuth page
       const redirectUrl = response.redirectURL;
