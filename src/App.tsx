@@ -1,5 +1,6 @@
 import "./App.css";
-// import store from "./store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import FitCoin from "./FitCoin";
 import { initializeApp } from "firebase/app";
@@ -27,6 +28,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <HashRouter>
           <FitCoin />
+          <ToastContainer />
         </HashRouter>
       </PersistGate>
     </Provider>
