@@ -61,6 +61,7 @@ function Details() {
     (state: FitCoinState) => state.userReducer.authToken,
   );
 
+  // Fetch details of the activity from backend
   useEffect(() => {
     const fetchDetails = async () => {
       if (stravaId !== "" && authToken !== "") {
@@ -71,11 +72,13 @@ function Details() {
     fetchDetails();
   }, [stravaId, authToken, did]);
 
+  // Render the following components in the details page
   const componentsToRender = ['distance', 'moving_time', 'elapsed_time', 'total_elevation_gain', 
                               'sport_type', 'start_date', 'location_city', 'location_state', 'location_country', 
                               'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility', 
                               'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
 
+  // Creates relevant units for the given value (i.e. 'meters' or 'seconds')
   const generateUnits = (key: string) => {
     if (key === 'distance') {
       return 'meters';
@@ -90,6 +93,7 @@ function Details() {
     }
   }
 
+  // Cleans up the date string to be more readable
   function cleanDateString(timestampString: string): string {
     const date: Date = new Date(timestampString);
     const options: Intl.DateTimeFormatOptions = {

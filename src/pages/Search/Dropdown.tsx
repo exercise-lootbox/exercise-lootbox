@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 const Dropdown = ({ options, onSelect, attributeName, currentState }: { options: any, onSelect: any, attributeName: string, currentState: string }) => {
   const [selectedOption, setSelectedOption] = useState(currentState);
 
+  // Update selected dropdown item when currentState changes
   useEffect(() => {
     setSelectedOption(currentState);
   }, [currentState]);
 
+  // Updates the selected option in the parent component
   const handleSelect = (event : any) => {
     onSelect(event, attributeName);
   };

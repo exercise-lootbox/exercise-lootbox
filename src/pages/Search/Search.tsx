@@ -17,6 +17,7 @@ function Search() {
     (state: FitCoinState) => state.userReducer.stravaId,
   );
 
+  // Default search parameters
   const defaultParameters: {[key: string]: string} = {
     "stravaId" : "",
     "name" : "",
@@ -31,6 +32,7 @@ function Search() {
     "trainer" : "",
   };
 
+  // Dummy results for when user not signed in
   const sampleResponse = 
     [ {
         "resource_state" : 2,
@@ -153,7 +155,8 @@ function Search() {
   const [parameters, setParameters] = useState(defaultParameters);
   const [results, setResults] = useState(sampleResponse);
 
-  // When the search criteria changes, update the parameters and get the results
+  // When the URL changes (with search criteria), parse URL, update the parameters 
+  // and get results from backend
   useEffect(() => {
     // Parse the query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
@@ -297,7 +300,9 @@ function Search() {
     return locationString;
   }
 
+  // Redirects to the details page for the selected activity
   const eventDetails = (resultId : string) => {
+    // Only redirect if listed results are not sample results
     if (results !== sampleResponse) {
       navigate(`/details/${resultId}`);
     }
