@@ -24,7 +24,6 @@ export default function Lootbox({ lootbox }: { lootbox: LootboxInfo }) {
       successToast(`You bought ${item.name}`);
     } catch (error: any) {
       errorToast(error.response.data.error);
-      console.error("Error buying item", error);
     }
   };
 
