@@ -179,7 +179,7 @@ function Search() {
   // Handles changes in the search form inputs
   const handleParameterChange = (event: any, parameterName: string) => {
     const newParameters = { ...parameters };
-    newParameters[parameterName] = event.target.value.toLowerCase();
+    newParameters[parameterName] = event.target.value;
     setParameters(newParameters);
   }
 

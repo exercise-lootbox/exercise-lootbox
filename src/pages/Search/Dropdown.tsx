@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 const Dropdown = ({ options, onSelect, attributeName, currentState }: { options: any, onSelect: any, attributeName: string, currentState: string }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(currentState);
+
+  useEffect(() => {
+    setSelectedOption(currentState);
+  }, [currentState]);
 
   const handleSelect = (event : any) => {
-    setSelectedOption(event.target.value);
     onSelect(event, attributeName);
   };
 
