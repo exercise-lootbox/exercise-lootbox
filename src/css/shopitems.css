@@ -15,3 +15,31 @@
   gap: 10px;
   padding: 30px;
 }
+
+.back-header-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.back-button {
+  outline: none;
+  border: none;
+  background: none;
+  transition: 0.3s;
+}
+
+.back-button:hover {
+  cursor: pointer;
+  transform: translateX(-2px);
+}
+
+.shop-link {
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.shop-link:hover {
+  text-decoration: underline;
+}

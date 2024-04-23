@@ -9,6 +9,9 @@ import "../../css/shopitems.css";
 import Coins from "../../components/Coins";
 import { FitCoinState } from "../../store/configureStore";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import BackIcon from "../../components/icons/BackIcon";
+import { Link } from "react-router-dom";
 
 export default function ShopItems() {
   const { lootboxId } = useParams();
@@ -17,6 +20,7 @@ export default function ShopItems() {
   const coins = useSelector(
     (state: FitCoinState) => state.persistedReducer.coins,
   );
+  const navigate = useNavigate();
 
   const sortedItems = items.slice().sort((a, b) => {
     const rarityOrder = {
@@ -55,7 +59,17 @@ export default function ShopItems() {
   return (
     <div>
       <div className="shop-header">
-        <h1>Shop</h1>
+        <div className="back-header-wrapper">
+          <button onClick={() => navigate(-1)} className="back-button">
+            <BackIcon />
+          </button>
+          <h1>
+            <Link to={"/shop"} className="shop-link">
+              Shop
+            </Link>
+          </h1>
+        </div>
+
         <Coins coins={coins} />
       </div>
       <div className="lootbox-wrapper">
