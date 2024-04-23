@@ -305,7 +305,7 @@ function Search() {
 
   return (
     <div>
-      <h1 className="search-header">Search That Shi Up Boiiiii</h1>
+      <h1 className="search-header">Search</h1>
       <div className="search-page">
         <div className="search-bar">
           {components.map((component) => {

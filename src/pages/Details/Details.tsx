@@ -71,10 +71,10 @@ function Details() {
     fetchDetails();
   }, [stravaId, authToken, did]);
 
-  const componentsNotToRender = ['name', 'distance', 'moving_time', 'elapsed_time', 'total_elevation_gain', 
-                                 'sport_type', 'start_date', 'location_city', 'location_state', 'location_country', 
-                                 'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility', 
-                                 'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
+  const componentsToRender = ['distance', 'moving_time', 'elapsed_time', 'total_elevation_gain', 
+                              'sport_type', 'start_date', 'location_city', 'location_state', 'location_country', 
+                              'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility', 
+                              'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
 
   const generateUnits = (key: string) => {
     if (key === 'distance') {
@@ -109,7 +109,7 @@ function Details() {
   }
 
   const createComponent = (key: string, value: any) => {
-    if (componentsNotToRender.includes(key) && value !== null) {
+    if (componentsToRender.includes(key) && value !== null) {
       const displayValue = key === 'start_date' ? cleanDateString(value) : capitalizeFirstLetter(String(value));
       
       return (
@@ -122,7 +122,7 @@ function Details() {
 
   return (
     <div>
-      <h1>Details</h1>
+      <h1>{String(details.name)}</h1>
       {Object.entries(details).map(([key, value]) => createComponent(key, value))}
     </div>
   );
