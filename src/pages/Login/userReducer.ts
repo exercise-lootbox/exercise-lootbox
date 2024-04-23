@@ -45,10 +45,19 @@ const userSlice = createSlice({
     setStravaId: (state, action) => {
       state.stravaId = action.payload;
     },
+    updateCoins: (state, action) => {
+      state.coins = state.coins - action.payload;
+    },
   },
 });
 
-export const { resetUser, setAuthToken, setUserId, setUser, setStravaId } =
-  userSlice.actions;
+export const {
+  resetUser,
+  setAuthToken,
+  setUserId,
+  setUser,
+  setStravaId,
+  updateCoins,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -15,8 +15,8 @@ export interface ItemInfo {
 }
 
 enum Rarity {
-  COMMON = "common",
-  RARE = "rare",
-  EPIC = "epic",
-  LEGENDARY = "legendary",
+  COMMON = "COMMON",
+  UNCOMMON = "UNCOMMON",
+  EPIC = "EPIC",
+  LEGENDARY = "LEGENDARY",
 }

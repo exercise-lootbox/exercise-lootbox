@@ -6,11 +6,28 @@ import { ItemInfo, LootboxInfo } from "../../types";
 import Lootbox from "../../components/Lootbox";
 import Item from "../../components/Item";
 import "../../css/shopitems.css";
+import Coins from "../../components/Coins";
+import { FitCoinState } from "../../store/configureStore";
+import { useSelector } from "react-redux";
 
 export default function ShopItems() {
   const { lootboxId } = useParams();
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [lootbox, setLootbox] = useState<LootboxInfo | null>(null);
+  const coins = useSelector(
+    (state: FitCoinState) => state.persistedReducer.coins,
+  );
+
+  const sortedItems = items.slice().sort((a, b) => {
+    const rarityOrder = {
+      COMMON: 0,
+      UNCOMMON: 1,
+      EPIC: 2,
+      LEGENDARY: 3,
+    };
+
+    return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+  });
 
   useEffect(() => {
     const fetchBox = async () => {
@@ -18,7 +35,6 @@ export default function ShopItems() {
         return;
       }
       const box = await lootboxClient.getLootbox(lootboxId);
-      console.log(box);
       setLootbox(box);
     };
     const fetchItems = async () => {
@@ -38,9 +54,16 @@ export default function ShopItems() {
 
   return (
     <div>
-      <Lootbox lootbox={lootbox} />
+      <div className="shop-header">
+        <h1>Shop</h1>
+        <Coins coins={coins} />
+      </div>
+      <div className="lootbox-wrapper">
+        <Lootbox lootbox={lootbox} />
+      </div>
+
       <div className="items">
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item key={item._id} item={item} />
         ))}
       </div>
