@@ -2,7 +2,13 @@ import React from "react";
 import { ItemInfo } from "../types";
 import "../css/item.css";
 
-export default function Item({ item }: { item: ItemInfo }) {
+export default function Item({
+  item,
+  lootbox,
+}: {
+  item: ItemInfo;
+  lootbox: string;
+}) {
   const rarityColors: { [key in string]: string } = {
     LEGENDARY: "gold",
     EPIC: "purple",
@@ -14,7 +20,7 @@ export default function Item({ item }: { item: ItemInfo }) {
     <div className={`item-container ${item.rarity}`}>
       <h2 className="item-title">{item.name}</h2>
       <img
-        src={`/images/states/${item.image}`}
+        src={`/images/${lootbox}/${item.image}`}
         alt={item.name}
         className="item-image"
       />

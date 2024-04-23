@@ -78,7 +78,9 @@ export default function ShopItems() {
 
       <div className="items">
         {sortedItems.map((item) => (
-          <Item key={item._id} item={item} />
+          <>
+            <Item key={item._id} item={item} lootbox={lootbox.name} />
+          </>
         ))}
       </div>
     </div>

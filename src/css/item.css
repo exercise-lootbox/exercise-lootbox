@@ -32,6 +32,7 @@
   font-size: 1.2em;
   margin-bottom: 10px;
   padding: 2px;
+  text-align: center;
 }
 
 .item-image {
@@ -43,7 +44,12 @@
 }
 
 .item-description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5px;
   margin: 0;
+  height: 36px;
 }
 
 .rarity-bar {
@@ -51,4 +57,28 @@
   width: 100%;
   margin-top: 10px;
   border-radius: 0 0 10px 10px;
+}
+
+.modal-content {
+  box-sizing: border-box;
+  margin-left: 200px;
+  width: 800px;
+}
+
+@media screen and (max-width: 1024px) {
+  .modal-content {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .modal-content {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .modal-content {
+    max-width: 400px;
+  }
 }
