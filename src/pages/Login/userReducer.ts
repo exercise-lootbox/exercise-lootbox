@@ -9,6 +9,7 @@ const initialState: any = {
   dob: undefined,
   role: "USER",
   stravaId: "",
+  coins: 0,
 };
 
 const userSlice = createSlice({
@@ -39,6 +40,7 @@ const userSlice = createSlice({
       state.dob = action.payload.dob;
       state.role = action.payload.role;
       state.stravaId = action.payload.stravaId;
+      state.coins = action.payload.coins;
     },
     setStravaId: (state, action) => {
       state.stravaId = action.payload;

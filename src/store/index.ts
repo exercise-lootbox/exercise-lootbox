@@ -13,6 +13,7 @@ export interface FitCoinState {
     stravaId: string;
   };
 }
+
 const store = configureStore({
   reducer: {
     userReducer,
