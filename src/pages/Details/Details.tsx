@@ -71,29 +71,59 @@ function Details() {
     fetchDetails();
   }, [stravaId, authToken, did]);
 
+  const componentsNotToRender = ['name', 'distance', 'moving_time', 'elapsed_time', 'total_elevation_gain', 
+                                 'sport_type', 'start_date', 'location_city', 'location_state', 'location_country', 
+                                 'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility', 
+                                 'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
+
+  const generateUnits = (key: string) => {
+    if (key === 'distance') {
+      return 'meters';
+    } else if (key === 'moving_time' || key === 'elapsed_time') {
+      return 'seconds';
+    } else if (key === 'total_elevation_gain' || key === 'elev_high' || key === 'elev_low') {
+      return 'meters';
+    } else if (key === 'average_speed' || key === 'max_speed') {
+      return 'meters per second';
+    } else {
+      return '';
+    }
+  }
+
+  function cleanDateString(timestampString: string): string {
+    const date: Date = new Date(timestampString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    };
+    return date.toLocaleString('en-US', options);
+  }
+
+  function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const createComponent = (key: string, value: any) => {
+    if (componentsNotToRender.includes(key) && value !== null) {
+      const displayValue = key === 'start_date' ? cleanDateString(value) : capitalizeFirstLetter(String(value));
+      
+      return (
+        <p key={key}>
+          {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}: {displayValue} {generateUnits(key)}
+        </p>
+      );
+    }
+  }
+
   return (
     <div>
       <h1>Details</h1>
-      <p>Name: {details.name}</p>
-      <p>Distance: {details.distance}</p>
-      <p>Moving Time: {details.moving_time}</p>
-      <p>Total Elevation Gain: {details.total_elevation_gain}</p>
-      <p>Type: {details.type}</p>
-      <p>Start Date: {details.start_date}</p>
-      <p>City: {details.location_city}</p>
-      <p>State: {details.location_state}</p>
-      <p>Country: {details.location_country}</p>
-      <p>Trainer: {details.trainer}</p>
-      <p>Commute: {details.commute}</p>
-      <p>Private: {details.private}</p>
-      <p>Visibility: {details.visibility}</p>
-      <p>Max Speed: {details.max_speed}</p>
-      <p>Has Heartrate: {details.has_heartrate}</p>
-      <p>Elevation High: {details.elev_high}</p>
-      <p>Elevation Low: {details.elev_low}</p>
-      <p>PR Count: {details.pr_count}</p>
-      <p>Total Photo Count: {details.total_photo_count}</p>
-      <p>Has Kudoed: {details.has_kudoed}</p>
+      {Object.entries(details).map(([key, value]) => createComponent(key, value))}
     </div>
   );
 }
