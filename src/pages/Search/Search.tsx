@@ -310,7 +310,7 @@ function Search() {
 
   return (
     <div>
-      <h1 className="search-header">Search</h1>
+      <h1 className="search-header">Search {stravaId === "" ? "(not logged in)" : ""}</h1>
       <div className="search-page">
         <div className="search-bar">
           {components.map((component) => {
@@ -334,9 +334,10 @@ function Search() {
           })}
           <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} currentState={parameters['sport_type']}/>
           <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} currentState={parameters['trainer']}/>
-          <button className="search-button" onClick={handleSearch}>
+          <button className={`search-button ${stravaId === "" ? "bg-secondary pe-none" : ""}`} onClick={handleSearch} disabled={stravaId === ""}>
             Search
           </button>
+          <p><i>{stravaId === "" ? "Log In For Search Functionality" : ""}</i></p>
         </div>
         <div className="results-page">
           {results.map((result: any) => {
