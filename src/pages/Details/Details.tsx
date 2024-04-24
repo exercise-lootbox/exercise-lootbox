@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleDetails } from "./sampleDetails";
 import * as client from "../../Integrations/Strava/stravaClient";
+import "./index.css";
 
 function Details() {
   const { did } = useParams();
@@ -81,7 +82,7 @@ function Details() {
   }
 
   return (
-    <div>
+    <div className="details-page">
       <h1>{String(details.name)}</h1>
       {Object.entries(details).map(([key, value]) => createComponent(key, value))}
     </div>
