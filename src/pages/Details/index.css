@@ -1,4 +1,19 @@
 .details-page {
     margin-left: 10px;
     font-size: 20px;
+    line-height: 2;
+
+    h1 {
+        padding-left: 10px;
+        padding-top: 10px;
+    }
+}
+
+.details-table {
+    td {
+        padding: 0 10px;
+    }
+    .left-column {
+        font-weight: 500;
+    }
 }

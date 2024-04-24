@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleDetails } from "./sampleDetails";
 import * as client from "../../Integrations/Strava/stravaClient";
-import "./index.css";
+import './index.css';
 
 function Details() {
   const { did } = useParams();
@@ -69,14 +69,57 @@ function Details() {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+  const attributeIcon = (key: string) => {
+    if (key === 'distance') {
+      return '🏃';
+    } else if (key === 'moving_time' || key === 'elapsed_time') {
+      return '⏱️';
+    } else if (key === 'total_elevation_gain') {
+      return '🏔️';
+    } else if (key === 'sport_type') {
+      return '🏋️';
+    } else if (key === 'start_date') {
+      return '📅';
+    } else if (key === 'location_city' || key === 'location_state' || key === 'location_country') {
+      return '🌍';
+    } else if (key === 'achievement_count') {
+      return '🏆';
+    } else if (key === 'kudos_count') {
+      return '👍';
+    } else if (key === 'comment_count') {
+      return '💬';
+    } else if (key === 'trainer') {
+      return '🚴';
+    } else if (key === 'visibility') {
+      return '👁️';
+    } else if (key === 'average_speed') {
+      return '🚀';
+    } else if (key === 'max_speed') {
+      return '💨';
+    } else if (key === 'elev_high') {
+      return '🔝';
+    } else if (key === 'elev_low') {
+      return '🔽';
+    } else if (key === 'pr_count') {
+      return '🥇';
+    } else {
+      return '';
+    }
+  }
+
   const createComponent = (key: string, value: any) => {
     if (componentsToRender.includes(key) && value !== null) {
       const displayValue = key === 'start_date' ? cleanDateString(value) : capitalizeFirstLetter(String(value));
       
       return (
-        <p key={key}>
-          {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}: {displayValue} {generateUnits(key)}
-        </p>
+        <tr key={key}>
+          <td className="left-column">
+            {attributeIcon(key)} {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}:
+          </td>
+          <td>
+            {displayValue} {generateUnits(key)}
+          </td>
+        </tr>
       );
     }
   }
@@ -84,7 +127,9 @@ function Details() {
   return (
     <div className="details-page">
       <h1>{String(details.name)}</h1>
-      {Object.entries(details).map(([key, value]) => createComponent(key, value))}
+      <table className="details-table">
+        {Object.entries(details).map(([key, value]) => createComponent(key, value))}
+      </table>
     </div>
   );
 }
