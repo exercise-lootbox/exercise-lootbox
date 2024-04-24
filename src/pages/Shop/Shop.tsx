@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as lootboxClient from "./lootboxClient";
 import { LootboxInfo } from "../../types";
-import Lootbox from "../../components/Lootbox";
+import Lootbox from "../../components/Lootbox/Lootbox";
 import Coins from "../../components/Coins";
 import "../../css/shop.css";
 import { useSelector } from "react-redux";

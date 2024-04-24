@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import * as lootboxClient from "./lootboxClient";
 import * as itemClient from "./itemClient";
 import { ItemInfo, LootboxInfo } from "../../types";
-import Lootbox from "../../components/Lootbox";
+import LootboxItemPage from "../../components/Lootbox/LootboxItemPage";
 import Item from "../../components/Items/Item";
 import "../../css/shopitems.css";
 import Coins from "../../components/Coins";
@@ -73,7 +73,7 @@ export default function ShopItems() {
         <Coins coins={coins} />
       </div>
       <div className="lootbox-wrapper">
-        <Lootbox lootbox={lootbox} />
+        <LootboxItemPage lootbox={lootbox} />
       </div>
 
       <div className="items">

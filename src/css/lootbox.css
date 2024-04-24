@@ -56,6 +56,11 @@
   justify-content: space-between;
 }
 
+.lootbox-buttons-no-view {
+  display: flex;
+  justify-content: center;
+}
+
 .button {
   display: inline-block;
   padding: 5px 5px;
@@ -66,6 +71,10 @@
   border-radius: 5px;
   cursor: pointer;
   width: 48%;
+}
+
+.big-button {
+  width: 100%;
 }
 
 .small-button {

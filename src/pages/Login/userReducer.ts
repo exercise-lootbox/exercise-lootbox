@@ -48,8 +48,8 @@ const userSlice = createSlice({
     setStravaId: (state, action) => {
       state.stravaId = action.payload;
     },
-    updateCoins: (state, action) => {
-      state.coins = state.coins - action.payload;
+    addCoins: (state, action) => {
+      state.coins = state.coins + action.payload;
     },
     setActingAsAdmin: (state, action) => {
       state.actingAsAdmin = action.payload;
@@ -63,7 +63,7 @@ export const {
   setUserId,
   setUser,
   setStravaId,
-  updateCoins,
+  addCoins,
   setActingAsAdmin,
 } = userSlice.actions;
 

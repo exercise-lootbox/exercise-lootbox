@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import "../css/lootbox.css";
+import "../../css/lootbox.css";
 import { Link } from "react-router-dom";
-import { ItemInfo, LootboxInfo } from "../types";
-import { getRandomItem } from "../utils";
-import * as userClient from "../pages/Login/userClient";
+import { ItemInfo, LootboxInfo } from "../../types";
+import { getRandomItem } from "../../utils";
+import * as userClient from "../../pages/Login/userClient";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCoins } from "../pages/Login/userReducer";
-import { errorToast, successToast } from "./toasts";
+import { addCoins } from "../../pages/Login/userReducer";
+import { errorToast, successToast } from "../toasts";
 import { useDisclosure } from "@chakra-ui/react";
-import BoughtItem from "./Items/BoughtItem";
+import BoughtItem from "../Items/BoughtItem";
 
-export default function Lootbox({ lootbox }: { lootbox: LootboxInfo }) {
+export default function LootboxItemPage({ lootbox }: { lootbox: LootboxInfo }) {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: any) => state.persistedReducer);
   const [wonItem, setWonItem] = useState<ItemInfo | null>(null);
@@ -25,8 +25,8 @@ export default function Lootbox({ lootbox }: { lootbox: LootboxInfo }) {
         item._id,
       );
       setWonItem(item);
-      dispatch(updateCoins(lootbox.price));
-      successToast(`You bought ${item.name}`);
+      dispatch(addCoins(-lootbox.price));
+      successToast(`You Won A ${item.name}`);
       onOpen();
     } catch (error: any) {
       errorToast(error.response.data.error);
@@ -48,13 +48,13 @@ export default function Lootbox({ lootbox }: { lootbox: LootboxInfo }) {
           <h3 className="lootbox-name">{lootbox.name}</h3>
           <p className="lootbox-price">{lootbox.price} 💰</p>
         </div>
-        <div className="lootbox-buttons">
-          <button className="button primary-button" onClick={buyItem}>
+        <div className="lootbox-buttons-no-view">
+          <button
+            className="button primary-button big-button"
+            onClick={buyItem}
+          >
             Buy
           </button>
-          <Link className="button primary-link" to={`/shop/${lootbox._id}`}>
-            View
-          </Link>
         </div>
       </div>
       {wonItem && (
