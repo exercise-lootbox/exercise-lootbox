@@ -20,3 +20,10 @@
   display: flex;
   justify-content: center;
 }
+
+.login-modal {
+  width: 1000px;
+  position: absolute;
+  top: 25%;
+  margin-left: 50px;
+}
