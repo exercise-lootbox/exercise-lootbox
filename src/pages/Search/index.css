@@ -24,7 +24,6 @@
     min-width: 250px;
     max-width: 250px;
     background-color: #f0f0f0; /* Sidebar background color */
-    height: 100vh; /* Sidebar takes full height */
     padding: 0 10px;
 }
 
@@ -39,6 +38,34 @@
     background-color: #f9f9f9; /* Result item background color */
     border-radius: 5px; /* Add border radius for rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add more prominent shadow for depth */
+    line-height: 1; /* Adjust line spacing as needed */
+}
+
+.result-item > p {
+    color: #333; /* Text color */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Font weight */
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Add margin as needed */
+}
+
+.result-body {
+    display: flex;
+    align-items: left;
+}
+
+.separator {
+    margin: 0 10px; /* Add margin between elements */
+}
+
+.right-margin-5 {
+    margin-right: 5px; /* Add margin to the right */
+    margin-bottom: 10px;
 }
 
 .search-button {
@@ -50,4 +77,14 @@
     cursor: pointer; /* Change cursor to pointer on hover */
     margin: 10px 0;
     width: 100%;
+}
+
+.right-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 15px; /* Add margin as needed */
 }
