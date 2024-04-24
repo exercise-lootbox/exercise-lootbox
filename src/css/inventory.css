@@ -7,12 +7,6 @@
   margin-bottom: 20px;
 }
 
-.inventory-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-}
-
 .inventory-item {
   border: 1px solid #ccc;
   padding: 10px;
