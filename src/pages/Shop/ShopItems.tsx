@@ -73,7 +73,7 @@ export default function ShopItems() {
         <Coins coins={coins} />
       </div>
       <div className="lootbox-wrapper">
-        <Lootbox lootbox={lootbox} />
+        <Lootbox lootbox={lootbox} forAdmin={false} />
       </div>
 
       <div className="items">

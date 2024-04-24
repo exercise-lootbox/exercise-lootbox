@@ -62,3 +62,17 @@ export const deleteAdmin = async (
   });
   return response.status;
 };
+
+export const updateLootboxPrice = async (
+  adminId: string,
+  lootboxId: string,
+  price: number,
+  authToken: string,
+) => {
+  const response = await axios.put(
+    `${ADMIN_API}/lootbox/${lootboxId}`,
+    { adminId, price },
+    config(authToken),
+  );
+  return response.status;
+};

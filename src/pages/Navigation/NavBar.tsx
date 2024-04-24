@@ -3,30 +3,48 @@ import { FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { GiChest } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
+import { useSelector } from "react-redux";
 import "./NavBar.css";
-
-const fitcoinLinks = [
-  { label: "Home", basePath: "home", icon: <FaHome className="fs-3" /> },
-  {
-    label: "Activities",
-    basePath: "search",
-    icon: <FaMagnifyingGlass className="fs-3" />,
-  },
-  {
-    label: "Shop",
-    basePath: "shop",
-    icon: <FaShoppingCart className="fs-3" />,
-  },
-  { label: "Profile", basePath: "profile", icon: <FaUser className="fs-3" /> },
-  {
-    label: "Inventory",
-    basePath: "inventory",
-    icon: <GiChest className="fs-3" />,
-  },
-];
+import { showAdminContent } from "../../utils";
 
 function NavBar({ closeAction }: { closeAction: (() => void) | undefined }) {
   const { pathname } = useLocation();
+  const adminId = useSelector((state: any) => state.persistedReducer.adminId);
+  const actingAsAdmin = useSelector((state: any) => state.persistedReducer.actingAsAdmin);
+  const adminActive = showAdminContent(adminId, actingAsAdmin);
+
+  const fitcoinLinks = [
+    {
+      label: adminActive ? "Admin Home" : "Home",
+      basePath: "home",
+      icon: <FaHome className="fs-3" />,
+      display: true,
+    },
+    {
+      label: adminActive ? "User Search" : "Activities",
+      basePath: "search",
+      icon: <FaMagnifyingGlass className="fs-3" />,
+      display: true,
+    },
+    {
+      label: adminActive ? "Edit Shop" : "Shop",
+      basePath: "shop",
+      icon: <FaShoppingCart className="fs-3" />,
+      display: true,
+    },
+    {
+      label: adminActive ? "Admin Profile" : "Profile",
+      basePath: "profile",
+      icon: <FaUser className="fs-3" />,
+      display: true,
+    },
+    {
+      label: "Inventory",
+      basePath: "inventory",
+      icon: <GiChest className="fs-3" />,
+      display: !adminActive,
+    },
+  ];
 
   return (
     <ul className="navigation">
@@ -37,7 +55,7 @@ function NavBar({ closeAction }: { closeAction: (() => void) | undefined }) {
           </button>
         </div>
       )}
-      {fitcoinLinks.map((link, index) => (
+      {fitcoinLinks.filter((link) => link.display).map((link, index) => (
         <li
           key={index}
           className={pathname.includes(link.basePath) ||

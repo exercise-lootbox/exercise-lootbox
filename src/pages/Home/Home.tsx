@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import "./Home.css";
 import "../../index.css";
 import * as stravaClient from "../../Integrations/Strava/stravaClient";
+import * as homeClient from "./homeClient";
+import * as adminClient from "../../Admin/adminClient";
 import StravaActivity from "../../components/StravaActivity";
+import { showAdminContent } from "../../utils";
 
 function Home() {
   const userInfo = useSelector((state: FitCoinState) => state.persistedReducer);
@@ -24,12 +27,21 @@ function Home() {
   const adminId = useSelector(
     (state: FitCoinState) => state.persistedReducer.adminId,
   );
+  const actingAsAdmin = useSelector(
+    (state: FitCoinState) => state.persistedReducer.actingAsAdmin,
+  );
   const [recentStravaData, setRecentStravaData] = useState<any>({
     recentActivities: [],
     nextRefresh: 0,
     coinsGained: 0,
   });
   const navigate = useNavigate();
+  const [memberSpotlight, setMemberSpotlight] = useState<any>([]);
+  const adminActive = showAdminContent(adminId, actingAsAdmin);
+  const [adminInfo, setAdminInfo] = useState<any>({
+    adminSince: Date.now(),
+    lastUpdate: Date.now(),
+  });
 
   const sampleStravaData: any = {
     recentActivities: [
@@ -72,8 +84,26 @@ function Home() {
       }
     };
 
+    const fetchMemberSpotlight = async () => {
+      try {
+        const spotlight = await homeClient.getMemberSpotlight();
+        setMemberSpotlight(spotlight);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    const fetchAdminInfo = async () => {
+      if (adminId !== undefined) {
+        const adminResponse = await adminClient.getAdmin(adminId, authToken);
+        setAdminInfo(adminResponse);
+      }
+    }
+
     fetchStravaData();
-  }, [authToken, stravaId, userId]);
+    fetchMemberSpotlight();
+    fetchAdminInfo();
+  }, [adminId, authToken, stravaId, userId]);
 
 
 
@@ -95,6 +125,59 @@ function Home() {
     }
     navigate("/details/" + activityId, { replace: true })
   }
+
+  const goToProfile = (userId: string) => {
+    navigate("/profile/" + userId, { replace: true });
+  }
+
+  function spotlightItem(member: any): JSX.Element {
+    return (
+      <div className="member-spotlight-content">
+        ⭐️ {member.firstName} {member.lastName} just earned {member.coinsEarned} FitCoins!
+        <div>
+        </div>
+        <button className="button primary-button small-button" onClick={() => { goToProfile(member.userId) }}>
+          Go to profile
+        </button>
+      </div>
+    );
+  }
+
+  const spotlight: JSX.Element = (
+    <div>
+      <hr />
+      <h4>Member Spotlight:</h4>
+      <ul className="member-spotlight">
+        {memberSpotlight.map((member: any, index: number) => {
+          return (
+            <li key={index}>
+              {spotlightItem(member)}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  )
+
+  const adminHomeContent: JSX.Element = (
+    <div>
+      <h3>
+        🔎 {userInfo.firstName}'s Admin Home
+      </h3>
+      <div className="admin-content">
+        <h6>
+          Admin since: {new Date(adminInfo.adminSince).toLocaleDateString()}
+        </h6>
+        <h6>
+          {adminInfo.lastUpdate &&
+            `Last admin update: ${new Date(adminInfo.lastUpdate).toLocaleDateString()}`}
+        </h6>
+        <div className="admin-accent">
+          Please use the sidebar on the left to complete admin actions.
+        </div>
+      </div>
+    </div>
+  )
 
   function homeContent(stravaData: any) {
     return (
@@ -143,6 +226,7 @@ function Home() {
             }
           </div>
         )}
+        {spotlight}
         {!isLoggedIn && (
           <div className="strava-summary">
             <Link to="/login">
@@ -159,41 +243,20 @@ function Home() {
   return (
     <div>
       <h1 className="header-text">Home</h1>
-      {isLoggedIn && <div>{homeContent(recentStravaData)}</div>}
-      {!isLoggedIn && <div>{homeContent(sampleStravaData)}</div>}
-      {/* {!isLoggedIn &&
-        <Link to="/login">
-          <button className="btn btn-primary">Go to Login</button>
-        </Link>
-      }
       {isLoggedIn &&
         <div>
-          <h3>{`Welcome back, ${userInfo.firstName}!`}</h3>
-          <h4>Activity Imports:</h4>
-          {stravaId === "" &&
+          {adminActive &&
             <div>
-              Connect to Strava in your profile to import activities and earn coins!
-            </div>
-          }
-          {stravaId !== "" &&
+              {adminHomeContent}
+            </div>}
+          {!adminActive &&
             <div>
-              <ul className="strava-activities">
-                {recentStravaData.recentActivities.map((activity: any, index: number) => {
-                  return (
-                    <li key={index}>
-                      {stravaActivity(activity)}
-                    </li>
-                  )
-                })}
-              </ul>
-              <div className="strava-summary">
-                Total coins earned on this import: {recentStravaData.coinsGained} <br />
-                Next Strava refresh: {nextRefreshDateString(recentStravaData.nextRefresh)}
-              </div>
+              {homeContent(recentStravaData)}
             </div>
           }
         </div>
-      } */}
+      }
+      {!isLoggedIn && <div>{homeContent(sampleStravaData)}</div>}
     </div>
   );
 }
