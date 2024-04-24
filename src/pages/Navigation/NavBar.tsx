@@ -28,7 +28,8 @@ function NavBar({ closeAction }: { closeAction: (() => void) | undefined }) {
         fitcoinLinks.map((link, index) => (
           <li
             key={index}
-            className={pathname.includes(link.basePath) ? "nav-active" : ""}
+            className={pathname.includes(link.basePath) ||
+              (pathname.includes("details") && link.basePath.includes("search")) ? "nav-active" : ""}
           >
             <Link className="text-decoration-none" to={`/${link.basePath}`}>
               <div className="navigation-pill">

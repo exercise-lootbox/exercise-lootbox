@@ -27,7 +27,6 @@
   color: var(--primary-color);
 }
 
-
 .activity-title-coins {
   font-weight: bold;
   color: var(--primary-color);
@@ -55,4 +54,10 @@
   padding: 10px 20px;
   font-weight: bold;
   margin-top: 200px;
+}
+
+.empty-activity-title {
+  text-align: center;
+  color: var(--secondary-color);
+  font-weight: bold;
 }

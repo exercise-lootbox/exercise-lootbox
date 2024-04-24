@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FitCoinState } from "../../store/configureStore";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import "./Home.css";
 import "../../index.css";
 import * as stravaClient from "../../Integrations/Strava/stravaClient";
-import { FaStrava } from "react-icons/fa";
+import StravaActivity from "../../components/StravaActivity";
 
 function Home() {
   const userInfo = useSelector((state: FitCoinState) => state.persistedReducer);
@@ -18,11 +18,15 @@ function Home() {
   const stravaId = useSelector(
     (state: FitCoinState) => state.persistedReducer.stravaId,
   );
+  const userId = useSelector(
+    (state: FitCoinState) => state.persistedReducer.userId,
+  );
   const [recentStravaData, setRecentStravaData] = useState<any>({
     recentActivities: [],
     nextRefresh: 0,
     coinsGained: 0,
   });
+  const navigate = useNavigate();
 
   const sampleStravaData: any = {
     recentActivities: [
@@ -56,7 +60,7 @@ function Home() {
           return;
         }
         const stravaData = await stravaClient.getRecentActivities(
-          stravaId,
+          userId,
           authToken,
         );
         setRecentStravaData(stravaData);
@@ -66,15 +70,9 @@ function Home() {
     };
 
     fetchStravaData();
-  }, [authToken, stravaId]);
+  }, [authToken, stravaId, userId]);
 
-  function activityDateString(date: Date) {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(new Date(date));
-  }
+
 
   function nextRefreshDateString(epoch: number) {
     const date = new Date(epoch * 1000);
@@ -88,30 +86,11 @@ function Home() {
     }).format(date);
   }
 
-  function stravaActivity(activity: any) {
-    return (
-      <>
-        <div className="activity-title-container">
-          <div className="activity-title">
-            <FaStrava className="strava-icon" /> {activity.activityName} - Your{" "}
-            {activity.activityType} on{" "}
-            {activityDateString(activity.activityStartDate)}
-          </div>
-          <div className="activity-title-coins">
-            {`💰 FitCoins Earned: ${activity.coins}`}
-          </div>
-        </div>
-        <div className="activity-subtitle">
-          {`🏃 Distance: ${activity.distance.toFixed(2)} meters`}
-        </div>
-        <div className="activity-subtitle">
-          {`⏱️ Active Time: ${(activity.movingTime / 60).toFixed(1)} minutes`}
-        </div>
-        <div className="activity-subtitle">
-          {`⛰️ Elevation: ${activity.elevation.toFixed(2)} meters`}
-        </div>
-      </>
-    );
+  const goToActivityDetails = (activityId: number) => {
+    if (stravaId === "") {
+      return; // The sample data has no details
+    }
+    navigate("/details/" + activityId, { replace: true })
   }
 
   function homeContent(stravaData: any) {
@@ -137,18 +116,28 @@ function Home() {
               </h4>
             )}
             <ul className="strava-activities">
+              {stravaData.recentActivities.length === 0 &&
+                <div className="empty-activity-title">
+                  No activities imported yet today!{" "} <br />
+                  {isLoggedIn && stravaId === "" && "Connect to Strava in your profile to start earning FitCoins!"}
+                </div>}
               {stravaData.recentActivities.map(
                 (activity: any, index: number) => {
-                  return <li key={index}>{stravaActivity(activity)}</li>;
+                  return <li key={index}>
+                    <StravaActivity activity={activity} isCurrentUserActivity={true} onClick={() => { goToActivityDetails(activity.id) }} />
+                  </li>;
                 },
               )}
             </ul>
-            <div className="strava-summary">
-              Total FitCoins earned on this import: {stravaData.coinsGained}{" "}
-              <br />
-              Next Strava refresh:{" "}
-              {nextRefreshDateString(stravaData.nextRefresh)}
-            </div>
+            {
+              stravaData.recentActivities.length > 0 &&
+              <div className="strava-summary">
+                Total FitCoins earned on this import: {stravaData.coinsGained}{" "}
+                <br />
+                Next Strava refresh:{" "}
+                {nextRefreshDateString(stravaData.nextRefresh)}
+              </div>
+            }
           </div>
         )}
         {!isLoggedIn && (

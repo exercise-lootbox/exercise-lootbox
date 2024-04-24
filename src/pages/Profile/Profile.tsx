@@ -11,6 +11,8 @@ import { errorToast, successToast } from "../../components/toasts";
 import "../../Integrations/Strava/Strava.css";
 import { FaStrava } from "react-icons/fa";
 import Coins from "../../components/Coins";
+import * as stravaClient from "../../Integrations/Strava/stravaClient";
+import StravaActivity from "../../components/StravaActivity";
 
 function Profile() {
   const { uid } = useParams();
@@ -32,27 +34,47 @@ function Profile() {
   const [preEditProfile, setPreEditProfile] = useState<any>(userProfile);
   const [emailUpdated, setEmailUpdated] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [recentStravaData, setRecentStravaData] = useState<any>({
+    recentActivities: [],
+    nextRefresh: 0,
+    coinsGained: 0,
+  });
+  const [rareItems, setRareItems] = useState<any>([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (!isLoggedIn) {
-          return;
-        }
+        let user;
         if (!uid) {
-          return await userClient.getUser(userId, authToken);
+          user = await userClient.getUser(userId, authToken);
         } else {
-          return await userClient.getOtherUser(uid);
+          user = await userClient.getOtherUser(uid);
         }
+        setUserProfile(user);
       } catch (error: any) {
         console.error(error.message);
       }
     }
+    const fetchStravaData = async () => {
+      try {
+        const stravaData = await stravaClient.getRecentActivities(
+          uid || userId,
+          authToken,
+        );
+        setRecentStravaData(stravaData);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
 
-    fetchUserProfile().then((profile) => {
-      setUserProfile(profile);
-    });
-  }, [authToken, uid, userId, isLoggedIn]);
+    if (!isLoggedIn && !uid) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    fetchUserProfile();
+    fetchStravaData();
+  }, [authToken, uid, userId, isLoggedIn, navigate]);
 
   const handleEdit = () => {
     if (isEditing) {
@@ -130,109 +152,203 @@ function Profile() {
     }
   }
 
-  if (!uid && isLoggedIn) {
-    return (
-      <div>
-        <div className="profile-header">
-          <h1>Your Profile</h1>
-          <div>
-            {isEditing &&
-              <button className={`button me-2 small-button primary-button`}
-                onClick={handleSave}>
-                Save
-              </button>
-            }
-            <button className={`button small-button ${isEditing ? `secondary-button` : `primary-button`}`}
-              onClick={handleEdit}>
-              {isEditing ? "Cancel" : "Edit"}
-            </button>
-          </div>
-        </div>
+  const goToActivityDetails = (activityId: number) => {
+    const queryString = uid ? `?stravaId=${userProfile.stravaId}` : "";
+    navigate("/details/" + activityId + queryString, { replace: true })
+  }
 
-        <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="first-name-profile">First name</label>
-          <input value={userProfile.firstName}
-            type="text"
-            className="form-control"
-            id="first-name-profile"
-            placeholder="First name"
-            disabled={!isEditing}
-            onChange={(e) => setUserProfile({
+  const goToInventory = () => {
+    const additionalPath = uid ? `/${uid}` : "";
+    navigate("/inventory" + additionalPath, { replace: true })
+  }
+
+  const editButtons: JSX.Element = (
+    <div>
+      {isEditing &&
+        <button className={`button me-2 small-button primary-button`}
+          onClick={handleSave}>
+          Save
+        </button>
+      }
+      <button className={`button small-button ${isEditing ? `secondary-button` : `primary-button`}`}
+        onClick={handleEdit}>
+        {isEditing ? "Cancel" : "Edit"}
+      </button>
+    </div>
+  )
+
+  const profileHeader: JSX.Element = (
+    <div className="profile-header">
+      {uid && <h1>{userProfile.firstName} {userProfile.lastName}'s' Profile</h1>}
+      {!uid && <h1>Your Profile</h1>}
+      {!uid && editButtons}
+    </div>
+  );
+
+  const userInfo: JSX.Element = (
+    <div>
+      <div className="form-group mb-2">
+        <label className="fw-bold" htmlFor="first-name-profile">First name</label>
+        <input value={userProfile.firstName}
+          type="text"
+          className="form-control"
+          id="first-name-profile"
+          placeholder="First name"
+          disabled={!isEditing}
+          onChange={(e) => setUserProfile({
+            ...userProfile,
+            firstName: e.target.value
+          })} />
+      </div>
+      <div className="form-group mb-2">
+        <label className="fw-bold" htmlFor="last-name-profile">Last name</label>
+        <input value={userProfile.lastName}
+          type="text"
+          className="form-control"
+          id="last-name-profile"
+          placeholder="Last name"
+          disabled={!isEditing}
+          onChange={(e) => setUserProfile({
+            ...userProfile,
+            lastName: e.target.value
+          })} />
+      </div>
+      <div className="form-group mb-2">
+        <label className="fw-bold" htmlFor="email-profile">Email</label>
+        <input value={userProfile.email}
+          type="text"
+          className="form-control"
+          id="email-profile"
+          placeholder="Email"
+          disabled={!isEditing}
+          onChange={(e) => {
+            setUserProfile({
               ...userProfile,
-              firstName: e.target.value
-            })} />
-        </div>
-        <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="last-name-profile">Last name</label>
-          <input value={userProfile.lastName}
-            type="text"
-            className="form-control"
-            id="last-name-profile"
-            placeholder="Last name"
-            disabled={!isEditing}
-            onChange={(e) => setUserProfile({
-              ...userProfile,
-              lastName: e.target.value
-            })} />
-        </div>
-        <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="email-profile">Email</label>
-          <input value={userProfile.email}
-            type="text"
-            className="form-control"
-            id="email-profile"
-            placeholder="Email"
-            disabled={!isEditing}
-            onChange={(e) => {
-              setUserProfile({
-                ...userProfile,
-                email: e.target.value
-              });
-              setEmailUpdated(true);
-            }} />
-        </div>
-        <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="birthday-profile">Birthday</label>
-          <input value={new Date(userProfile.dob).toISOString().split('T')[0]}
-            type="date"
-            className="form-control"
-            id="birthday-profile"
-            placeholder="Birthday"
-            disabled={!isEditing}
-            max={new Date().toISOString().split('T')[0]}
-            onChange={(e) => setUserProfile({
-              ...userProfile,
-              dob: e.target.value
-            })} />
-        </div>
+              email: e.target.value
+            });
+            setEmailUpdated(true);
+          }} />
+      </div>
+      <div className="form-group mb-2">
+        <label className="fw-bold" htmlFor="birthday-profile">Birthday</label>
+        <input value={new Date(userProfile.dob).toISOString().split('T')[0]}
+          type="date"
+          className="form-control"
+          id="birthday-profile"
+          placeholder="Birthday"
+          disabled={!isEditing}
+          max={new Date().toISOString().split('T')[0]}
+          onChange={(e) => setUserProfile({
+            ...userProfile,
+            dob: e.target.value
+          })} />
+      </div>
+    </div>
+  )
+
+  const integrationInfo: JSX.Element = (
+    <div>
+      <h3>Integrations</h3>
+      {userProfile.stravaId === "" && isLoggedIn && !uid &&
+        <h6>
+          <FaStrava className="strava-icon" />
+          You have not yet connected to Strava
+          <button className="ms-2 button strava-button small-button" onClick={handleConnectToStrava}>
+            Connect Now!
+          </button>
+        </h6>
+      }
+      {userProfile.stravaId !== "" &&
         <div>
-          <hr />
-          <h3>Integrations</h3>
-          {userProfile.stravaId === "" && isLoggedIn &&
+          <h6>
+            <FaStrava className="strava-icon" />
+            Connected to Strava!
+          </h6>
+        </div>
+      }
+    </div>
+  )
+
+  const inventoryInfo: JSX.Element = (
+    <div>
+      <div className="inventory-title">
+        <h3>Inventory</h3>
+        <Coins coins={userProfile.coins} />
+      </div>
+      {rareItems.length !== 0 &&
+        <div>
+          {(uid || !isLoggedIn) &&
             <h6>
-              <FaStrava className="strava-icon" />
-              You have not yet connected to Strava
-              <button className="ms-2 button strava-button small-button" onClick={handleConnectToStrava}>
-                Connect Now!
-              </button>
+              Here are {userProfile.firstName}'s most rare items!
             </h6>
           }
-          {userProfile.stravaId !== "" &&
+          {!uid &&
             <div>
               <h6>
-                <FaStrava className="strava-icon" />
-                Connected to Strava!
+                Here are your most rare items!
               </h6>
             </div>
           }
+          <button className="button primary-button small-button">
+            View All
+          </button>
         </div>
+      }
+      {rareItems.length === 0 &&
         <div>
-          <hr />
-          <div className="inventory-title">
-          <h3>Inventory</h3>
-          <Coins coins={userProfile.coins} />
-          </div>
+          {(uid || !isLoggedIn) &&
+            <h6>
+              {userProfile.firstName} has no items yet.
+            </h6>}
+          {!uid &&
+            <h6>
+              You have no items yet. Head to the shop to buy some!
+            </h6>
+          }
         </div>
+      }
+    </div>
+  )
+
+
+  const recentActivities: JSX.Element = (
+    <div>
+      <h3>Recent Activities</h3>
+      <ul className="strava-activities">
+        {recentStravaData.recentActivities.length === 0 &&
+          <div>
+            {!uid &&
+              <div>
+                No activities completed in the past day! Get moving!
+              </div>
+            }
+            {uid &&
+              <div>
+                {userProfile.firstName} has not completed any activities in the past day.
+              </div>
+            }
+          </div>
+        }
+        {recentStravaData.recentActivities.map((activity: any, index: number) => {
+          return <li key={index}>
+            <StravaActivity activity={activity} isCurrentUserActivity={!uid} onClick={() => { goToActivityDetails(activity.id) }} />
+          </li>;
+        })}
+      </ul>
+    </div>
+  )
+
+  if (!uid && isLoggedIn) {
+    return (
+      <div>
+        {profileHeader}
+        {userInfo}
+        <hr />
+        {recentActivities}
+        <hr />
+        {integrationInfo}
+        <hr />
+        {inventoryInfo}
         <hr />
         <button className="button danger-button small-button mt-2" onClick={signOutUser}>
           Logout
