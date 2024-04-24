@@ -57,7 +57,6 @@
 .result-body {
     display: flex;
     align-items: left;
-    margin-bottom: 10px; /* Add margin as needed */
 }
 
 .separator {
@@ -66,6 +65,7 @@
 
 .right-margin-5 {
     margin-right: 5px; /* Add margin to the right */
+    margin-bottom: 10px;
 }
 
 .search-button {
@@ -77,4 +77,14 @@
     cursor: pointer; /* Change cursor to pointer on hover */
     margin: 10px 0;
     width: 100%;
+}
+
+.right-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 15px; /* Add margin as needed */
 }

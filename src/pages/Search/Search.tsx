@@ -170,22 +170,27 @@ function Search() {
             const displaySportIcon = sportIcon(result.sport_type);
             const displayElapsedTime = new Date(result.elapsed_time * 1000).toISOString().substr(11, 8);
             const displayTrainer = result.trainer ? "Trainer" : "Not a Trainer";
-            const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
+            // const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
+            const displayLocation = "Boston, Massachusetts, USA";
             return (
               <div className="result-item" onClick={() => eventDetails(result.id)}>
                 <span className="result-header">
-                  <h2>{result.name}</h2>
-                  <p className="right-margin-5">{displayDate}</p>
-                </span>
-                <span className="result-body">
-                  <p className="ml-0">{`${displaySportIcon} ${displaySportType}`}</p> 
-                  <p className="separator">|</p>
-                  <p>{`⏱️ ${displayElapsedTime}`}</p>
-                  <p className="separator">|</p>
-                  <p>{`💨 ${result.distance}`} meters</p>
+                  <span>
+                    <h2 className="margin-bottom-10">{result.name}</h2>
+                    <span className="result-body">
+                      <p className="ml-0">{`${displaySportIcon} ${displaySportType}`}</p> 
+                      <p className="separator">|</p>
+                      <p>{`⏱️ ${displayElapsedTime}`}</p>
+                      <p className="separator">|</p>
+                      <p>{`💨 ${result.distance}`} meters</p>
+                    </span>
+                  </span>
+                  <span className="right-header">
+                    <p className="right-margin-5">{displayDate}</p>
+                    <p>{displayLocation}</p>
+                  </span> 
                 </span>
                 <p>{displayTrainer}</p>
-                <p>{displayLocation}</p>
               </div>
             );
           })}
