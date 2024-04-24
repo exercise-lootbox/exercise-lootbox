@@ -114,7 +114,7 @@ function FitCoin() {
           className={`${
             isOnLogin
               ? "fitcoin-content-login"
-              : "ms-2 me-2 fitcoin-content d-none d-md-block"
+              : "fitcoin-content d-none d-md-block"
           }`}
         >
           {routes()}
