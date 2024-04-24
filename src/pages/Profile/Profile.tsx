@@ -12,7 +12,9 @@ import "../../Integrations/Strava/Strava.css";
 import { FaStrava } from "react-icons/fa";
 import Coins from "../../components/Coins";
 import * as stravaClient from "../../Integrations/Strava/stravaClient";
+import * as adminClient from "../../Admin/adminClient";
 import StravaActivity from "../../components/StravaActivity";
+import AdminToggle from "../../components/AdminSwitch";
 
 function Profile() {
   const { uid } = useParams();
@@ -20,6 +22,8 @@ function Profile() {
   const userId = useSelector((state: any) => state.persistedReducer.userId);
   const authToken = useSelector((state: any) => state.persistedReducer.authToken);
   const isLoggedIn = useSelector((state: any) => state.persistedReducer.isLoggedIn);
+  const adminId = useSelector((state: any) => state.persistedReducer.adminId);
+  const actingAsAdmin = useSelector((state: any) => state.persistedReducer.actingAsAdmin);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
@@ -30,6 +34,11 @@ function Profile() {
     dob: Date.now(),
     coins: 0,
     stravaId: "",
+    adminId: undefined,
+  });
+  const [adminInfo, setAdminInfo] = useState<any>({
+    adminSince: Date.now(),
+    lastUpdate: Date.now(),
   });
   const [preEditProfile, setPreEditProfile] = useState<any>(userProfile);
   const [emailUpdated, setEmailUpdated] = useState(false);
@@ -71,10 +80,17 @@ function Profile() {
       navigate("/login", { replace: true });
       return;
     }
+    const fetchAdminInfo = async () => {
+      if (userProfile.adminId !== undefined && !uid) {
+        const adminResponse = await adminClient.getAdmin(adminId, authToken);
+        setAdminInfo(adminResponse);
+      }
+    }
 
     fetchUserProfile();
     fetchStravaData();
-  }, [authToken, uid, userId, isLoggedIn, navigate]);
+    fetchAdminInfo();
+  }, [authToken, uid, userId, isLoggedIn, navigate, userProfile.adminId, adminId]);
 
   const handleEdit = () => {
     if (isEditing) {
@@ -338,17 +354,42 @@ function Profile() {
     </div>
   )
 
+  const adminProfile: JSX.Element = (
+    <div>
+      <h3>Admin Info</h3>
+      <div>
+        <h6>
+          Admin since: {new Date(adminInfo.adminSince).toLocaleDateString()}
+        </h6>
+        <h6>
+          {adminInfo.lastUpdate &&
+            `Last admin update: ${new Date(adminInfo.lastUpdate).toLocaleDateString()}`}
+        </h6>
+      </div>
+    </div>
+  )
+
   if (!uid && isLoggedIn) {
     return (
       <div>
         {profileHeader}
+        {!uid && <AdminToggle />}
         {userInfo}
         <hr />
-        {recentActivities}
-        <hr />
-        {integrationInfo}
-        <hr />
-        {inventoryInfo}
+        {userProfile.adminId !== undefined && actingAsAdmin &&
+          <div>
+            {adminProfile}
+          </div>
+        }
+        {(userProfile.adminId === undefined || !actingAsAdmin) &&
+          <div>
+            {recentActivities}
+            <hr />
+            {integrationInfo}
+            <hr />
+            {inventoryInfo}
+          </div>
+        }
         <hr />
         <button className="button danger-button small-button mt-2" onClick={signOutUser}>
           Logout

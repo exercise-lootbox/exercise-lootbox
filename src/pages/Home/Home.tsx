@@ -21,6 +21,9 @@ function Home() {
   const userId = useSelector(
     (state: FitCoinState) => state.persistedReducer.userId,
   );
+  const adminId = useSelector(
+    (state: FitCoinState) => state.persistedReducer.adminId,
+  );
   const [recentStravaData, setRecentStravaData] = useState<any>({
     recentActivities: [],
     nextRefresh: 0,

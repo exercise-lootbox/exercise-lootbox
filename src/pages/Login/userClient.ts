@@ -1,4 +1,5 @@
 import axios from "axios";
+import { config } from "../../utils";
 
 const BASE_API = process.env.REACT_APP_API_BASE;
 const USERS_API = `${BASE_API}/api/users`;
@@ -10,12 +11,6 @@ export interface UserInfo {
   email: string;
   dob: Date;
 }
-
-const config = (authToken: string) => {
-  return {
-    headers: { Authorization: `Bearer ${authToken}` },
-  };
-};
 
 export const createUser = async (user: UserInfo) => {
   const response = await axios.post(`${USERS_API}`, user);

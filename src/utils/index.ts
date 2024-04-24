@@ -25,3 +25,9 @@ export const getRandomItem = async (lootboxId: string) => {
   const randomItem = availableItems[randomIndex];
   return randomItem;
 };
+
+export const config = (authToken: string) => {
+  return {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+};
