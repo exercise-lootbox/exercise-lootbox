@@ -7,6 +7,7 @@ export interface UserInfo {
   _id: string;
   firstName: string;
   lastName: string;
+  email: string;
   dob: Date;
 }
 
@@ -21,8 +22,39 @@ export const createUser = async (user: UserInfo) => {
   return response.data;
 };
 
+export const updateUser = async (
+  id: string,
+  user: UserInfo,
+  authToken: string,
+) => {
+  const response = await axios.put(
+    `${USERS_API}/${id}`,
+    user,
+    config(authToken),
+  );
+  return response.data;
+};
+
+export const updateEmail = async (
+  id: string,
+  email: string,
+  authToken: string,
+) => {
+  const response = await axios.put(
+    `${USERS_API}/email/${id}`,
+    { email },
+    config(authToken),
+  );
+  return response.data;
+};
+
 export const getUser = async (id: string, authToken: string) => {
   const response = await axios.get(`${USERS_API}/${id}`, config(authToken));
+  return response.data;
+};
+
+export const getOtherUser = async (id: string) => {
+  const response = await axios.get(`${USERS_API}/other/${id}`);
   return response.data;
 };
 

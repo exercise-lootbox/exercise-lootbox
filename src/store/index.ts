@@ -9,7 +9,6 @@ export interface FitCoinState {
     firstName: string;
     lastName: string;
     dob: Date | undefined;
-    role: string;
     stravaId: string;
   };
 }

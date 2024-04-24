@@ -77,6 +77,15 @@
   background-color: #0056b3;
 }
 
+.secondary-button {
+  background-color: gray;
+  color: #fff;
+}
+
+.secondary-button:hover {
+  background-color: lightgray;
+}
+
 .primary-link {
   background-color: #6c757d;
   color: #fff;

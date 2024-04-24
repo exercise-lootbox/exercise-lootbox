@@ -7,7 +7,6 @@ const initialState: any = {
   firstName: "",
   lastName: "",
   dob: undefined,
-  role: "USER",
   stravaId: "",
   coins: 0,
 };
@@ -23,7 +22,6 @@ const userSlice = createSlice({
       state.firstName = "";
       state.lastName = "";
       state.dob = undefined;
-      state.role = "USER";
       state.stravaId = "";
     },
     setAuthToken: (state, action) => {
@@ -38,7 +36,6 @@ const userSlice = createSlice({
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
       state.dob = action.payload.dob;
-      state.role = action.payload.role;
       state.stravaId = action.payload.stravaId;
       state.coins = action.payload.coins;
     },
