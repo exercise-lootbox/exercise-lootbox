@@ -1,6 +1,6 @@
 import React from "react";
-import { ItemInfo } from "../types";
-import "../css/item.css";
+import { ItemInfo } from "../../types";
+import "../../css/item.css";
 
 export default function Item({
   item,

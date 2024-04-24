@@ -1,4 +1,5 @@
 import * as itemClient from "../pages/Shop/itemClient";
+import * as lootboxClient from "../pages/Shop/lootboxClient";
 import { ItemInfo } from "../types";
 
 export const getRandomItem = async (lootboxId: string) => {
@@ -24,4 +25,9 @@ export const getRandomItem = async (lootboxId: string) => {
   const randomIndex = Math.floor(Math.random() * availableItems.length);
   const randomItem = availableItems[randomIndex];
   return randomItem;
+};
+
+export const getLootboxName = async (lootboxId: string) => {
+  const lootbox = await lootboxClient.getLootbox(lootboxId);
+  return lootbox.name;
 };

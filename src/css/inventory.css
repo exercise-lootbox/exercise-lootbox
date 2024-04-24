@@ -1,0 +1,21 @@
+.inventory-container {
+  padding: 20px;
+}
+
+.inventory-header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.inventory-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.inventory-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  height: 200px;
+}

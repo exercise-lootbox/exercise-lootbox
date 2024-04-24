@@ -4,7 +4,7 @@ import * as lootboxClient from "./lootboxClient";
 import * as itemClient from "./itemClient";
 import { ItemInfo, LootboxInfo } from "../../types";
 import Lootbox from "../../components/Lootbox";
-import Item from "../../components/Item";
+import Item from "../../components/Items/Item";
 import "../../css/shopitems.css";
 import Coins from "../../components/Coins";
 import { FitCoinState } from "../../store/configureStore";

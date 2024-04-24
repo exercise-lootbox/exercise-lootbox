@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateCoins } from "../pages/Login/userReducer";
 import { errorToast, successToast } from "./toasts";
 import { useDisclosure } from "@chakra-ui/react";
-import BoughtItem from "./BoughtItem";
+import BoughtItem from "./Items/BoughtItem";
 
 export default function Lootbox({ lootbox }: { lootbox: LootboxInfo }) {
   const dispatch = useDispatch();
