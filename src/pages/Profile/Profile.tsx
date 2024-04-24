@@ -8,12 +8,16 @@ import { setUser } from "../Login/userReducer";
 import "./Profile.css"
 import LoginModal from "../Login/LoginModal";
 import { errorToast, successToast } from "../../components/toasts";
+import "../../Integrations/Strava/Strava.css";
+import { FaStrava } from "react-icons/fa";
+import Coins from "../../components/Coins";
 
 function Profile() {
   const { uid } = useParams();
   const auth = getAuth();
   const userId = useSelector((state: any) => state.persistedReducer.userId);
   const authToken = useSelector((state: any) => state.persistedReducer.authToken);
+  const isLoggedIn = useSelector((state: any) => state.persistedReducer.isLoggedIn);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
@@ -32,6 +36,9 @@ function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        if (!isLoggedIn) {
+          return;
+        }
         if (!uid) {
           return await userClient.getUser(userId, authToken);
         } else {
@@ -45,7 +52,7 @@ function Profile() {
     fetchUserProfile().then((profile) => {
       setUserProfile(profile);
     });
-  }, [authToken, uid, userId]);
+  }, [authToken, uid, userId, isLoggedIn]);
 
   const handleEdit = () => {
     if (isEditing) {
@@ -110,6 +117,10 @@ function Profile() {
     }
   }
 
+  const handleConnectToStrava = () => {
+    navigate("/integrations/strava", { replace: true });
+  }
+
   const signOutUser = async () => {
     try {
       await signOut(auth);
@@ -119,19 +130,19 @@ function Profile() {
     }
   }
 
-  if (!uid) {
+  if (!uid && isLoggedIn) {
     return (
       <div>
         <div className="profile-header">
           <h1>Your Profile</h1>
           <div>
             {isEditing &&
-              <button className={`button me-2 header-button primary-button`}
+              <button className={`button me-2 small-button primary-button`}
                 onClick={handleSave}>
                 Save
               </button>
             }
-            <button className={`button header-button ${isEditing ? `secondary-button` : `primary-button`}`}
+            <button className={`button small-button ${isEditing ? `secondary-button` : `primary-button`}`}
               onClick={handleEdit}>
               {isEditing ? "Cancel" : "Edit"}
             </button>
@@ -139,11 +150,11 @@ function Profile() {
         </div>
 
         <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="first-name">First name</label>
+          <label className="fw-bold" htmlFor="first-name-profile">First name</label>
           <input value={userProfile.firstName}
             type="text"
             className="form-control"
-            id="first-name"
+            id="first-name-profile"
             placeholder="First name"
             disabled={!isEditing}
             onChange={(e) => setUserProfile({
@@ -152,11 +163,11 @@ function Profile() {
             })} />
         </div>
         <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="last-name">Last name</label>
+          <label className="fw-bold" htmlFor="last-name-profile">Last name</label>
           <input value={userProfile.lastName}
             type="text"
             className="form-control"
-            id="last-name"
+            id="last-name-profile"
             placeholder="Last name"
             disabled={!isEditing}
             onChange={(e) => setUserProfile({
@@ -165,11 +176,11 @@ function Profile() {
             })} />
         </div>
         <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="email">Email</label>
+          <label className="fw-bold" htmlFor="email-profile">Email</label>
           <input value={userProfile.email}
             type="text"
             className="form-control"
-            id="email"
+            id="email-profile"
             placeholder="Email"
             disabled={!isEditing}
             onChange={(e) => {
@@ -181,11 +192,11 @@ function Profile() {
             }} />
         </div>
         <div className="form-group mb-2">
-          <label className="fw-bold" htmlFor="birthday">Birthday</label>
+          <label className="fw-bold" htmlFor="birthday-profile">Birthday</label>
           <input value={new Date(userProfile.dob).toISOString().split('T')[0]}
             type="date"
             className="form-control"
-            id="birthday"
+            id="birthday-profile"
             placeholder="Birthday"
             disabled={!isEditing}
             max={new Date().toISOString().split('T')[0]}
@@ -194,7 +205,36 @@ function Profile() {
               dob: e.target.value
             })} />
         </div>
-        <button className="btn btn-danger" onClick={signOutUser}>
+        <div>
+          <hr />
+          <h3>Integrations</h3>
+          {userProfile.stravaId === "" && isLoggedIn &&
+            <h6>
+              <FaStrava className="strava-icon" />
+              You have not yet connected to Strava
+              <button className="ms-2 button strava-button small-button" onClick={handleConnectToStrava}>
+                Connect Now!
+              </button>
+            </h6>
+          }
+          {userProfile.stravaId !== "" &&
+            <div>
+              <h6>
+                <FaStrava className="strava-icon" />
+                Connected to Strava!
+              </h6>
+            </div>
+          }
+        </div>
+        <div>
+          <hr />
+          <div className="inventory-title">
+          <h3>Inventory</h3>
+          <Coins coins={userProfile.coins} />
+          </div>
+        </div>
+        <hr />
+        <button className="button danger-button small-button mt-2" onClick={signOutUser}>
           Logout
         </button>
         <LoginModal

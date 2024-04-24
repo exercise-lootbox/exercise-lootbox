@@ -43,13 +43,13 @@ function LoginModal({ show, handleClose, authSucceeded, authFailed, }: {
         <Modal.Body>
           <div>
             <div className="form-group mb-2">
-              <label className="fw-bold" htmlFor="email">Email address</label>
-              <input value={email} type="email" className="form-control" id="email" placeholder="Enter email"
+              <label className="fw-bold" htmlFor="email-modal">Email address</label>
+              <input value={email} type="email" className="form-control" id="email-modal" placeholder="Enter email"
                 onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="form-group mb-2">
-              <label className="fw-bold" htmlFor="password">Password</label>
-              <input value={password} type="password" className="form-control" id="password" placeholder="Enter password"
+              <label className="fw-bold" htmlFor="password-modal">Password</label>
+              <input value={password} type="password" className="form-control" id="password-modal" placeholder="Enter password"
                 onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
