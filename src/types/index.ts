@@ -72,7 +72,7 @@ export const sportTypes = [
   "Wheelchair",
   "Windsurf",
   "Workout",
-  "Yoga"
+  "Yoga",
 ];
 
 // Options for 'trainer' attribute dropdown
