@@ -12,7 +12,7 @@
   margin-left: 100px;
   display: flex;
   gap: 10px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
   margin: 20px 0;
   padding: 0 10px;
