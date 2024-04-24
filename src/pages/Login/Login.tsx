@@ -51,6 +51,7 @@ function Login() {
         _id: userId,
         firstName: firstName,
         lastName: lastName,
+        email: email,
         dob: new Date(birthday)
       });
 

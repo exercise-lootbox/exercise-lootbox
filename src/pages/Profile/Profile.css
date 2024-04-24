@@ -1,0 +1,11 @@
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventory-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

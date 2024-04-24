@@ -1,6 +1,6 @@
 import React from "react";
-import { ItemInfo } from "../types";
-import "../css/item.css";
+import { ItemInfo } from "../../types";
+import "../../css/item.css";
 import {
   Modal,
   ModalOverlay,
@@ -59,7 +59,7 @@ export default function BoughtItem({
             <img
               src={`/images/${lootbox}/${item.image}`}
               alt={item.name}
-              style={{ width: "100%", height: "auto" }}
+              style={{ width: "100%", height: "500px" }}
             />
           </ModalBody>
           <ModalFooter style={{ display: "flex", gap: 10 }}>

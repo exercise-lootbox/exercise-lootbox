@@ -1,0 +1,15 @@
+.admin-switch {
+  font-weight: bold;
+}
+
+.admin-switch .form-check-input {
+  border-color: var(--primary-color);
+}
+
+.admin-switch .form-check-input:checked {
+  background-color: var(--primary-color);
+}
+
+.admin-switch .form-check-input:focus {
+  box-shadow: 0 0 0 0 var(--primary-color); /* Change to your desired focus color */
+}

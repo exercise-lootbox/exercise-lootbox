@@ -15,6 +15,8 @@ export interface FitCoinState {
     role: string;
     stravaId: string;
     coins: number;
+    adminId: string | undefined;
+    actingAsAdmin: boolean;
   };
 }
 

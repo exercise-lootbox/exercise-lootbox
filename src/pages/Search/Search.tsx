@@ -19,18 +19,18 @@ function Search() {
   );
 
   // Default search parameters
-  const defaultParameters: {[key: string]: string} = {
-    "stravaId" : "",
-    "name" : "",
-    "location_city" : "",
-    "location_state" : "",
-    "location_country" : "",
-    "min_distance" : "",
-    "max_distance" : "",
-    "sport_type" : "",
-    "date_before" : "",
-    "date_after" : "",
-    "trainer" : "",
+  const defaultParameters: { [key: string]: string } = {
+    "stravaId": "",
+    "name": "",
+    "location_city": "",
+    "location_state": "",
+    "location_country": "",
+    "min_distance": "",
+    "max_distance": "",
+    "sport_type": "",
+    "date_before": "",
+    "date_after": "",
+    "trainer": "",
   };
 
   const [parameters, setParameters] = useState(defaultParameters);
@@ -56,7 +56,7 @@ function Search() {
     if (params['stravaId'] === "") {
       params['stravaId'] = stravaId;
     }
-    const response = await axios.get(`${API_BASE}/api/search`, {params: params});
+    const response = await axios.get(`${API_BASE}/api/search`, { params: params });
     setResults(response.data);
   }
 
@@ -100,13 +100,13 @@ function Search() {
 
   // Components and associated input type for search form
   const components = [
-    ["name", "text"], 
-    ["location_city", "text"], 
-    ["location_state", "text"], 
-    ["location_country", "text"], 
-    ["min_distance", "number"], 
-    ["max_distance", "number"], 
-    ["date_before", "date"], 
+    ["name", "text"],
+    ["location_city", "text"],
+    ["location_state", "text"],
+    ["location_country", "text"],
+    ["min_distance", "number"],
+    ["max_distance", "number"],
+    ["date_before", "date"],
     ["date_after", "date"]
   ]
 
@@ -125,7 +125,7 @@ function Search() {
   }
 
   // Redirects to the details page for the selected activity
-  const eventDetails = (resultId : string) => {
+  const eventDetails = (resultId: string) => {
     // Only redirect if listed results are not sample results
     if (results !== sampleResponse) {
       navigate(`/details/${resultId}`);
@@ -137,13 +137,13 @@ function Search() {
       <h1 className="search-header">Search {stravaId === "" ? "(not logged in)" : ""}</h1>
       <div className="search-page">
         <div className="search-bar">
-          {components.map((component) => {
+          {components.map((component, index: number) => {
             const labelTitle = component[0].charAt(0).toUpperCase() + component[0].slice(1).replace('_', ' ');
             const unitsTitle = component[0].includes("distance") ? " (meters)" : "";
             return (
-              <div className="form-input">
+              <div key={index} className="form-input">
                 <label htmlFor="searchInput">{labelTitle}{unitsTitle}</label>
-                <br/>
+                <br />
                 <input
                   type={component[1]}
                   id="searchInput"
@@ -156,15 +156,15 @@ function Search() {
               </div>
             );
           })}
-          <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} currentState={parameters['sport_type']}/>
-          <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} currentState={parameters['trainer']}/>
+          <Dropdown options={sportTypes} onSelect={handleParameterChange} attributeName={'sport_type'} currentState={parameters['sport_type']} />
+          <Dropdown options={trainerTypes} onSelect={handleParameterChange} attributeName={'trainer'} currentState={parameters['trainer']} />
           <button className={`search-button ${stravaId === "" ? "bg-secondary pe-none" : ""}`} onClick={handleSearch} disabled={stravaId === ""}>
             Search
           </button>
           <p><i>{stravaId === "" ? "Log In For Search Functionality" : ""}</i></p>
         </div>
         <div className="results-page">
-          {results.map((result: any) => {
+          {results.map((result: any, index: number) => {
             const displayDate = new Date(result.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const displaySportType = result.sport_type.replace(/\B(?=[A-Z])/g, ' ');
             const displaySportIcon = sportIcon(result.sport_type);
@@ -173,7 +173,7 @@ function Search() {
             // const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
             const displayLocation = "Boston, Massachusetts, USA";
             return (
-              <div className="result-item" onClick={() => eventDetails(result.id)}>
+              <div key={index} className="result-item" onClick={() => eventDetails(result.id)}>
                 <span className="result-header">
                   <span>
                     <h2 className="margin-bottom-10">{result.name}</h2>

@@ -68,6 +68,10 @@
   width: 48%;
 }
 
+.small-button {
+  width: 150px !important;
+}
+
 .primary-button {
   background-color: #007bff;
   color: #fff;
@@ -75,6 +79,33 @@
 
 .primary-button:hover {
   background-color: #0056b3;
+}
+
+.secondary-button {
+  background-color: gray;
+  color: #fff;
+}
+
+.secondary-button:hover {
+  background-color: lightgray;
+}
+
+.danger-button {
+  background-color: #f33e50;
+  color: #fff;
+}
+
+.danger-button:hover {
+  background-color: #fb828e;
+}
+
+.strava-button {
+  background-color: var(--strava-color);
+  color: #fff;
+}
+
+.strava-button:hover {
+  background-color: var(--strava-color-highlight);
 }
 
 .primary-link {

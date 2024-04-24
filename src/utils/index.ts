@@ -1,4 +1,5 @@
 import * as itemClient from "../pages/Shop/itemClient";
+import * as lootboxClient from "../pages/Shop/lootboxClient";
 import { ItemInfo } from "../types";
 
 export const getRandomItem = async (lootboxId: string) => {
@@ -24,4 +25,35 @@ export const getRandomItem = async (lootboxId: string) => {
   const randomIndex = Math.floor(Math.random() * availableItems.length);
   const randomItem = availableItems[randomIndex];
   return randomItem;
+};
+
+export const config = (authToken: string) => {
+  return {
+    headers: { Authorization: `Bearer ${authToken}` },
+  };
+};
+
+export const getLootboxName = async (lootboxId: string) => {
+  const lootbox = await lootboxClient.getLootbox(lootboxId);
+  return lootbox.name;
+};
+
+export const sortInventoryItems = (items: ItemInfo[]) => {
+  return items.slice().sort((a, b) => {
+    if (a.lootboxId !== b.lootboxId) {
+      return a.lootboxId.localeCompare(b.lootboxId);
+    }
+
+    if (a.rarity !== b.rarity) {
+      const rarityOrder = {
+        COMMON: 0,
+        UNCOMMON: 1,
+        EPIC: 2,
+        LEGENDARY: 3,
+      };
+      return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+    }
+
+    return a.name.localeCompare(b.name);
+  });
 };
