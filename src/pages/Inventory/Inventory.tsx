@@ -17,12 +17,31 @@ export default function Inventory() {
   const auth = useSelector(
     (state: FitCoinState) => state.persistedReducer.authToken,
   );
-
   const [items, setItems] = useState<ItemInfo[]>([]);
-
   const [user, setUser] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+    const sortItems = (items: ItemInfo[]) => {
+      return items.slice().sort((a, b) => {
+        if (a.lootboxId !== b.lootboxId) {
+          return a.lootboxId.localeCompare(b.lootboxId);
+        }
+
+        if (a.rarity !== b.rarity) {
+          const rarityOrder = {
+            COMMON: 0,
+            UNCOMMON: 1,
+            EPIC: 2,
+            LEGENDARY: 3,
+          };
+          return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+        }
+
+        return a.name.localeCompare(b.name);
+      });
+    };
     const retrieveUserItems = async () => {
       try {
         const items = await userClient.getItems(uid ? uid : userId, auth);
@@ -30,7 +49,8 @@ export default function Inventory() {
           itemClient.getItem(item),
         );
         const fetchedItems = await Promise.all(itemPromises);
-        setItems(fetchedItems);
+        const sortedItems = sortItems(fetchedItems);
+        setItems(sortedItems);
       } catch (error) {
         console.error("Error retrieving user items:", error);
       }
@@ -40,25 +60,12 @@ export default function Inventory() {
       userClient.getUser(uid, auth).then((user) => setUser(user.firstName));
     }
     retrieveUserItems();
+    setLoading(false);
   }, [auth, uid, userId]);
 
-  const sortedItems = items.slice().sort((a, b) => {
-    if (a.lootboxId !== b.lootboxId) {
-      return a.lootboxId.localeCompare(b.lootboxId);
-    }
-
-    if (a.rarity !== b.rarity) {
-      const rarityOrder = {
-        COMMON: 0,
-        UNCOMMON: 1,
-        EPIC: 2,
-        LEGENDARY: 3,
-      };
-      return rarityOrder[a.rarity] - rarityOrder[b.rarity];
-    }
-
-    return a.name.localeCompare(b.name);
-  });
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!uid) {
     if (!userId) {
@@ -89,8 +96,8 @@ export default function Inventory() {
         <div className="inventory-container">
           <h1 className="inventory-header">Your Inventory</h1>
           <div className="items">
-            {sortedItems.map((item) => (
-              <InventoryItem key={item._id} itemId={item._id} />
+            {items.map((item) => (
+              <InventoryItem itemId={item._id} />
             ))}
           </div>
         </div>
@@ -101,8 +108,8 @@ export default function Inventory() {
       <div className="inventory-container">
         <h1 className="inventory-header">{user}'s Inventory</h1>
         <div className="items">
-          {sortedItems.map((item) => (
-            <InventoryItem key={item._id} itemId={item._id} />
+          {items.map((item) => (
+            <InventoryItem itemId={item._id} />
           ))}
         </div>
       </div>

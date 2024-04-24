@@ -10,6 +10,7 @@ import {
   ModalBody,
   Button,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function BoughtItem({
   item,
@@ -76,8 +77,8 @@ export default function BoughtItem({
             >
               Close
             </Button>
-            <Button
-              onClick={onClose}
+            <Link
+              to="/inventory"
               style={{
                 backgroundColor: "green",
                 color: "white",
@@ -85,10 +86,11 @@ export default function BoughtItem({
                 padding: "8px 16px",
                 outline: "none",
                 border: "none",
+                textDecoration: "none",
               }}
             >
               Inventory
-            </Button>
+            </Link>
           </ModalFooter>
         </div>
       </ModalContent>
