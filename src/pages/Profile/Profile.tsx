@@ -13,8 +13,12 @@ import { FaStrava } from "react-icons/fa";
 import Coins from "../../components/Coins";
 import * as stravaClient from "../../Integrations/Strava/stravaClient";
 import * as adminClient from "../../Admin/adminClient";
+import * as itemClient from "../Shop/itemClient";
 import StravaActivity from "../../components/StravaActivity";
 import AdminToggle from "../../components/AdminSwitch";
+import { ItemInfo } from "../../types";
+import { sortInventoryItems } from "../../utils";
+import InventoryItem from "../../components/Items/InventoryItem";
 
 function Profile() {
   const { uid } = useParams();
@@ -48,7 +52,7 @@ function Profile() {
     nextRefresh: 0,
     coinsGained: 0,
   });
-  const [rareItems, setRareItems] = useState<any>([]);
+  const [mostRareItems, setMostRareItems] = useState<ItemInfo[]>([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -76,10 +80,6 @@ function Profile() {
       }
     };
 
-    if (!isLoggedIn && !uid) {
-      navigate("/login", { replace: true });
-      return;
-    }
     const fetchAdminInfo = async () => {
       if (userProfile.adminId !== undefined && !uid) {
         const adminResponse = await adminClient.getAdmin(adminId, authToken);
@@ -87,9 +87,30 @@ function Profile() {
       }
     }
 
+    const fetchMostRareItems = async () => {
+      try {
+        const items = await userClient.getItems(uid ? uid : userId, authToken);
+        const itemPromises = items.map((item: string) =>
+          itemClient.getItem(item),
+        );
+        const fetchedItems = await Promise.all(itemPromises);
+        // Only want the 5 most rare items max
+        const sortedItems = sortInventoryItems(fetchedItems).slice(-5);
+        setMostRareItems(sortedItems);
+      } catch (error) {
+        console.error("Error retrieving user items:", error);
+      }
+    };
+
+    if (!isLoggedIn && !uid) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
     fetchUserProfile();
     fetchStravaData();
     fetchAdminInfo();
+    fetchMostRareItems();
   }, [authToken, uid, userId, isLoggedIn, navigate, userProfile.adminId, adminId]);
 
   const handleEdit = () => {
@@ -195,7 +216,7 @@ function Profile() {
 
   const profileHeader: JSX.Element = (
     <div className="profile-header">
-      {uid && <h1>{userProfile.firstName} {userProfile.lastName}'s' Profile</h1>}
+      {uid && <h1>{userProfile.firstName} {userProfile.lastName}'s Profile</h1>}
       {!uid && <h1>Your Profile</h1>}
       {!uid && editButtons}
     </div>
@@ -229,36 +250,40 @@ function Profile() {
             lastName: e.target.value
           })} />
       </div>
-      <div className="form-group mb-2">
-        <label className="fw-bold" htmlFor="email-profile">Email</label>
-        <input value={userProfile.email}
-          type="text"
-          className="form-control"
-          id="email-profile"
-          placeholder="Email"
-          disabled={!isEditing}
-          onChange={(e) => {
-            setUserProfile({
-              ...userProfile,
-              email: e.target.value
-            });
-            setEmailUpdated(true);
-          }} />
-      </div>
-      <div className="form-group mb-2">
-        <label className="fw-bold" htmlFor="birthday-profile">Birthday</label>
-        <input value={new Date(userProfile.dob).toISOString().split('T')[0]}
-          type="date"
-          className="form-control"
-          id="birthday-profile"
-          placeholder="Birthday"
-          disabled={!isEditing}
-          max={new Date().toISOString().split('T')[0]}
-          onChange={(e) => setUserProfile({
-            ...userProfile,
-            dob: e.target.value
-          })} />
-      </div>
+      {!uid &&
+        <div>
+          <div className="form-group mb-2">
+            <label className="fw-bold" htmlFor="email-profile">Email</label>
+            <input value={userProfile.email}
+              type="text"
+              className="form-control"
+              id="email-profile"
+              placeholder="Email"
+              disabled={!isEditing}
+              onChange={(e) => {
+                setUserProfile({
+                  ...userProfile,
+                  email: e.target.value
+                });
+                setEmailUpdated(true);
+              }} />
+          </div>
+          <div className="form-group mb-2">
+            <label className="fw-bold" htmlFor="birthday-profile">Birthday</label>
+            <input value={new Date(userProfile.dob).toISOString().split('T')[0]}
+              type="date"
+              className="form-control"
+              id="birthday-profile"
+              placeholder="Birthday"
+              disabled={!isEditing}
+              max={new Date().toISOString().split('T')[0]}
+              onChange={(e) => setUserProfile({
+                ...userProfile,
+                dob: e.target.value
+              })} />
+          </div>
+        </div>
+      }
     </div>
   )
 
@@ -291,7 +316,7 @@ function Profile() {
         <h3>Inventory</h3>
         <Coins coins={userProfile.coins} />
       </div>
-      {rareItems.length !== 0 &&
+      {mostRareItems.length !== 0 &&
         <div>
           {(uid || !isLoggedIn) &&
             <h6>
@@ -299,18 +324,21 @@ function Profile() {
             </h6>
           }
           {!uid &&
-            <div>
-              <h6>
-                Here are your most rare items!
-              </h6>
-            </div>
+            <h6>
+              Here are your most rare items!
+            </h6>
           }
-          <button className="button primary-button small-button">
+          <div className="items">
+            {mostRareItems.map((item, index: number) => (
+              <InventoryItem key={index} itemId={item._id} />
+            ))}
+          </div>
+          <button className="button primary-button small-button" onClick={goToInventory}>
             View All
           </button>
         </div>
       }
-      {rareItems.length === 0 &&
+      {mostRareItems.length === 0 &&
         <div>
           {(uid || !isLoggedIn) &&
             <h6>
@@ -369,45 +397,43 @@ function Profile() {
     </div>
   )
 
-  if (!uid && isLoggedIn) {
-    return (
-      <div>
-        {profileHeader}
-        {!uid && <AdminToggle />}
-        {userInfo}
-        <hr />
-        {userProfile.adminId !== undefined && actingAsAdmin &&
-          <div>
-            {adminProfile}
-          </div>
-        }
-        {(userProfile.adminId === undefined || !actingAsAdmin) &&
-          <div>
-            {recentActivities}
-            <hr />
-            {integrationInfo}
-            <hr />
-            {inventoryInfo}
-          </div>
-        }
-        <hr />
-        <button className="button danger-button small-button mt-2" onClick={signOutUser}>
-          Logout
-        </button>
-        <LoginModal
-          show={showModal}
-          handleClose={handleModalExit}
-          authSucceeded={handleAuthSucceeded}
-          authFailed={handleAuthFailed} />
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h1>User {uid}'s Profile</h1>
-      </div>
-    );
-  }
+  return (
+    <div>
+      {profileHeader}
+      {!uid && <AdminToggle />}
+      {userInfo}
+      <hr />
+      {userProfile.adminId !== undefined && actingAsAdmin && !uid &&
+        <div>
+          {adminProfile}
+        </div>
+      }
+      {(userProfile.adminId === undefined || !actingAsAdmin || uid) &&
+        <div>
+          {recentActivities}
+          <hr />
+          {integrationInfo}
+          <hr />
+          {inventoryInfo}
+        </div>
+      }
+
+      {!uid &&
+        <div>
+          <hr />
+          <button className="button danger-button small-button mt-2" onClick={signOutUser}>
+            Logout
+          </button>
+        </div>
+      }
+
+      <LoginModal
+        show={showModal}
+        handleClose={handleModalExit}
+        authSucceeded={handleAuthSucceeded}
+        authFailed={handleAuthFailed} />
+    </div>
+  );
 }
 
 export default Profile
