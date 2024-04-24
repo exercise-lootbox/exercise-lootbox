@@ -24,6 +24,7 @@ import useWindowGrew from "./hooks/useWindowGrew";
 import { useLocation } from "react-router-dom";
 import Shop from "./pages/Shop";
 import ShopItems from "./pages/Shop/ShopItems";
+import Inventory from "./pages/Inventory";
 
 function FitCoin() {
   const auth = getAuth();
@@ -84,6 +85,8 @@ function FitCoin() {
         <Route path="/details/:did" element={<Details />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/:lootboxId" element={<ShopItems />} />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/inventory/:uid" element={<Inventory />} />
       </Routes>
     );
   }

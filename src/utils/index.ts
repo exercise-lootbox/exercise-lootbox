@@ -1,4 +1,5 @@
 import * as itemClient from "../pages/Shop/itemClient";
+import * as lootboxClient from "../pages/Shop/lootboxClient";
 import { ItemInfo } from "../types";
 
 export const getRandomItem = async (lootboxId: string) => {
@@ -30,4 +31,9 @@ export const config = (authToken: string) => {
   return {
     headers: { Authorization: `Bearer ${authToken}` },
   };
+};
+
+export const getLootboxName = async (lootboxId: string) => {
+  const lootbox = await lootboxClient.getLootbox(lootboxId);
+  return lootbox.name;
 };

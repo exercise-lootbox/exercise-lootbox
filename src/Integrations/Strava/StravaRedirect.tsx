@@ -29,7 +29,7 @@ function StravaRedirect() {
         const stravaId = response.stravaId;
         dispatch(setStravaId(stravaId));
       } catch {
-        console.log("No StravaId found for user, navigating back to Home.");
+        console.error("No StravaId found for user, navigating back to Home.");
         navigate("/home", { replace: true });
       }
     };

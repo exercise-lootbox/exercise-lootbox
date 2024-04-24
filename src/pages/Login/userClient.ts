@@ -66,3 +66,11 @@ export const buyItem = async (
   );
   return response.data;
 };
+
+export const getItems = async (userId: string, authToken: string) => {
+  const response = await axios.get(
+    `${USERS_API}/items/${userId}`,
+    config(authToken),
+  );
+  return response.data;
+};
