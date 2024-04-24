@@ -7,6 +7,7 @@ import * as itemClient from "../Shop/itemClient";
 import InventoryItem from "../../components/Items/InventoryItem";
 import "../../css/inventory.css";
 import { ItemInfo } from "../../types";
+import { Link } from "react-router-dom";
 
 export default function Inventory() {
   const { uid } = useParams();
@@ -60,16 +61,41 @@ export default function Inventory() {
   });
 
   if (!uid) {
-    return (
-      <div className="inventory-container">
-        <h1 className="inventory-header">Current User's Inventory</h1>
-        <div className="items">
-          {sortedItems.map((item) => (
-            <InventoryItem key={item._id} itemId={item._id} />
-          ))}
+    if (!userId) {
+      return (
+        <div className="inventory-container">
+          <h1 className="inventory-header">
+            Please log in to view your inventory
+          </h1>
+          <Link to="/login" className="btn btn-primary">
+            Login
+          </Link>
         </div>
-      </div>
-    );
+      );
+    } else if (items.length === 0) {
+      return (
+        <div className="inventory-container">
+          <h1 className="inventory-header">Your Inventory</h1>
+          <h3 className="inventory-header">
+            You have no items in your inventory
+          </h3>
+          <h3 className="inventory-header">
+            Check out shop and workout to buy items!
+          </h3>
+        </div>
+      );
+    } else {
+      return (
+        <div className="inventory-container">
+          <h1 className="inventory-header">Your Inventory</h1>
+          <div className="items">
+            {sortedItems.map((item) => (
+              <InventoryItem key={item._id} itemId={item._id} />
+            ))}
+          </div>
+        </div>
+      );
+    }
   } else {
     return (
       <div className="inventory-container">
