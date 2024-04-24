@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
@@ -8,6 +8,7 @@ import InventoryItem from "../../components/Items/InventoryItem";
 import "../../css/inventory.css";
 import { ItemInfo } from "../../types";
 import { Link } from "react-router-dom";
+import { sortInventoryItems } from "../../utils";
 
 export default function Inventory() {
   const { uid } = useParams();
@@ -19,29 +20,8 @@ export default function Inventory() {
   );
   const [items, setItems] = useState<ItemInfo[]>([]);
   const [user, setUser] = useState<string>("");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    const sortItems = (items: ItemInfo[]) => {
-      return items.slice().sort((a, b) => {
-        if (a.lootboxId !== b.lootboxId) {
-          return a.lootboxId.localeCompare(b.lootboxId);
-        }
-
-        if (a.rarity !== b.rarity) {
-          const rarityOrder = {
-            COMMON: 0,
-            UNCOMMON: 1,
-            EPIC: 2,
-            LEGENDARY: 3,
-          };
-          return rarityOrder[a.rarity] - rarityOrder[b.rarity];
-        }
-
-        return a.name.localeCompare(b.name);
-      });
-    };
     const retrieveUserItems = async () => {
       try {
         const items = await userClient.getItems(uid ? uid : userId, auth);
@@ -49,8 +29,7 @@ export default function Inventory() {
           itemClient.getItem(item),
         );
         const fetchedItems = await Promise.all(itemPromises);
-        const sortedItems = sortItems(fetchedItems);
-        setItems(sortedItems);
+        setItems(fetchedItems);
       } catch (error) {
         console.error("Error retrieving user items:", error);
       }
@@ -60,12 +39,9 @@ export default function Inventory() {
       userClient.getUser(uid, auth).then((user) => setUser(user.firstName));
     }
     retrieveUserItems();
-    setLoading(false);
   }, [auth, uid, userId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const sortedItems = sortInventoryItems(items);
 
   if (!uid) {
     if (!userId) {
@@ -96,8 +72,8 @@ export default function Inventory() {
         <div className="inventory-container">
           <h1 className="inventory-header">Your Inventory</h1>
           <div className="items">
-            {items.map((item) => (
-              <InventoryItem itemId={item._id} />
+            {sortedItems.map((item, index: number) => (
+              <InventoryItem key={index} itemId={item._id} />
             ))}
           </div>
         </div>
@@ -108,8 +84,8 @@ export default function Inventory() {
       <div className="inventory-container">
         <h1 className="inventory-header">{user}'s Inventory</h1>
         <div className="items">
-          {items.map((item) => (
-            <InventoryItem itemId={item._id} />
+          {sortedItems.map((item, index: number) => (
+            <InventoryItem key={index} itemId={item._id} />
           ))}
         </div>
       </div>

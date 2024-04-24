@@ -20,17 +20,14 @@ export const getStravaId = async (userId: string, authToken: string) => {
 };
 
 export const getRecentActivities = async (
-  stravaId: string,
+  userId: string,
   authToken: string,
 ) => {
   const config = {
     headers: { Authorization: `Bearer ${authToken}` },
   };
 
-  let response = await axios.get(
-    `${STRAVA_API}/activities/${stravaId}`,
-    config,
-  );
+  let response = await axios.get(`${STRAVA_API}/activities/${userId}`, config);
   return response.data;
 };
 
@@ -48,4 +45,4 @@ export const getStravaActivity = async (
     config,
   );
   return response.data;
-}
+};

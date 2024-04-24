@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleDetails } from "./sampleDetails";
 import * as client from "../../Integrations/Strava/stravaClient";
@@ -19,20 +19,24 @@ function Details() {
 
   // Fetch details of the activity from backend
   useEffect(() => {
-    const fetchDetails = async () => {
-      if (stravaId !== "" && authToken !== "") {
-        const activity = await client.getStravaActivity(stravaId, authToken, did || "");
+    const fetchDetails = async (sid: string) => {
+      if (sid !== "" && authToken !== "") {
+        const activity = await client.getStravaActivity(sid, authToken, did || "");
         setDetails(activity);
       }
     }
-    fetchDetails();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const otherUserStravaId = urlParams.get('stravaId');
+
+    fetchDetails(otherUserStravaId || stravaId);
   }, [stravaId, authToken, did]);
 
   // Render the following components in the details page
-  const componentsToRender = ['distance', 'moving_time', 'elapsed_time', 'total_elevation_gain', 
-                              'sport_type', 'start_date', 'location_city', 'location_state', 'location_country', 
-                              'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility', 
-                              'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
+  const componentsToRender = ['distance', 'moving_time', 'elapsed_time', 'total_elevation_gain',
+    'sport_type', 'start_date', 'location_city', 'location_state', 'location_country',
+    'achievement_count', 'kudos_count', 'comment_count', 'trainer', 'visibility',
+    'average_speed', 'max_speed', 'elev_high', 'elev_low', 'pr_count']
 
   // Creates relevant units for the given value (i.e. 'meters' or 'seconds')
   const generateUnits = (key: string) => {
@@ -71,7 +75,7 @@ function Details() {
   const createComponent = (key: string, value: any) => {
     if (componentsToRender.includes(key) && value !== null) {
       const displayValue = key === 'start_date' ? cleanDateString(value) : capitalizeFirstLetter(String(value));
-      
+
       return (
         <p key={key}>
           {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}: {displayValue} {generateUnits(key)}
