@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useLocation } from "react-router";
+import { useParams } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleDetails } from "./sampleDetails";
 import * as client from "../../Integrations/Strava/stravaClient";
