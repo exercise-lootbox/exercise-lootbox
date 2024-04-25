@@ -58,7 +58,7 @@ export default function ShopItems() {
 
   return (
     <div>
-      <div className="shop-header">
+      <div className="page-header">
         <div className="back-header-wrapper">
           <button onClick={() => navigate(-1)} className="back-button">
             <BackIcon />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/lootbox.css";
+import "../../css/lootbox.css";
 import { Link } from "react-router-dom";
 import { ItemInfo, LootboxInfo } from "../../types";
 import { getRandomItem } from "../../utils";

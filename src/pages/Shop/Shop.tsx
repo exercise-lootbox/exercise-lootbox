@@ -34,19 +34,19 @@ export default function Shop() {
 
   const shopTitle: JSX.Element = (
     <div>
-      {adminActive &&
-        <div className="shop-header">
+      {adminActive && (
+        <div className="page-header">
           <h1>Edit Shop</h1>
         </div>
-      }
-      {!adminActive &&
-        <div className="shop-header">
+      )}
+      {!adminActive && (
+        <div className="page-header">
           <h1>Shop</h1>
           {isLoggedIn && <Coins coins={coins} />}
         </div>
-      }
+      )}
     </div>
-  )
+  );
 
   return (
     <div>
