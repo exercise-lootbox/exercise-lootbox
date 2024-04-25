@@ -2,6 +2,7 @@ import { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import { useSelector } from "react-redux";
 import * as adminClient from "../Admin/adminClient";
+import { errorToast, successToast } from "./toasts";
 
 export default function AdminResult({ result }: { result: any }) {
   const authToken = useSelector(
@@ -29,7 +30,9 @@ export default function AdminResult({ result }: { result: any }) {
     try {
       await adminClient.updateUserCoins(adminId, result._id, balance, authToken);
       setIsEditing(false);
+      successToast("Balance updated successfully")
     } catch (error: any) {
+      errorToast("Failed to update balance. Please try again later.");
       console.error(error.message);
     }
     setIsEditing(false);
@@ -46,8 +49,9 @@ export default function AdminResult({ result }: { result: any }) {
         await adminClient.createAdmin(adminId, userId, authToken);
       }
       setIsAdmin(!isAdmin);
-
+      successToast("Admin status updated successfully");
     } catch (error: any) {
+      errorToast("Failed to update admin status. Please try again later.");
       console.error(error.message);
     }
   }
@@ -55,7 +59,9 @@ export default function AdminResult({ result }: { result: any }) {
   const handleResetStravaSync = async () => {
     try {
       await adminClient.resetUserStravaSync(adminId, result._id, authToken);
+      successToast("Strava sync reset successfully");
     } catch (error: any) {
+      errorToast("Failed to reset Strava sync. Please try again later.");
       console.error(error.message);
     }
   }

@@ -4,6 +4,7 @@ import * as adminClient from "../../Admin/adminClient";
 import { useSelector } from "react-redux";
 import "./AdminSearch.css";
 import AdminResult from "../../components/AdminResult";
+import { errorToast } from "../../components/toasts";
 
 function AdminSearch() {
   const adminId = useSelector(
@@ -23,6 +24,7 @@ function AdminSearch() {
       const results = await adminClient.getUsersMatchingSearch(adminId, searchQuery, authToken);
       setSearchResults(results);
     } catch (error: any) {
+      errorToast("Something went wrong. Please try again later.");
       console.error(error.message);
     }
   }

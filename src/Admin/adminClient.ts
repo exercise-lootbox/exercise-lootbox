@@ -66,7 +66,7 @@ export const deleteAdmin = async (
 export const updateLootboxPrice = async (
   adminId: string,
   lootboxId: string,
-  price: number,// 1713975562
+  price: number,
   authToken: string,
 ) => {
   const response = await axios.put(
