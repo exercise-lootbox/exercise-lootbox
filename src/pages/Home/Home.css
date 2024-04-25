@@ -8,6 +8,28 @@
   padding: 10px;
   border-radius: 16px;
   box-shadow: 0px 1px 3px 1px lightgray;
+  margin-bottom: 8px;
+}
+
+.member-spotlight {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.member-spotlight li {
+  padding: 10px;
+  border-radius: 16px;
+  box-shadow: 0px 0px 4px 2px goldenrod;
+  margin-bottom: 12px;
+}
+
+.member-spotlight-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--accent-color);
+  font-weight: 500;
 }
 
 .activity-title-container {
@@ -60,4 +82,13 @@
   text-align: center;
   color: var(--secondary-color);
   font-weight: bold;
+}
+
+.admin-content {
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-accent {
+  color: var(--accent-color)
 }

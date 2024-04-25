@@ -57,3 +57,10 @@ export const sortInventoryItems = (items: ItemInfo[]) => {
     return a.name.localeCompare(b.name);
   });
 };
+
+export const showAdminContent = (
+  adminId: string | undefined,
+  actingAsAdmin: boolean,
+): boolean => {
+  return (adminId !== undefined) && actingAsAdmin;
+};

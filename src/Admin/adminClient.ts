@@ -12,14 +12,15 @@ export const getAdmin = async (adminId: string, authToken: string) => {
   return response.data;
 };
 
-export const addUserCoins = async (
+export const updateUserCoins = async (
   adminId: string,
   userId: string,
+  coins: number,
   authToken: string,
 ) => {
   const response = await axios.put(
     `${ADMIN_API}/users/coins/${userId}`,
-    { adminId },
+    { adminId, coins },
     config(authToken),
   );
   return response.data;
@@ -43,12 +44,11 @@ export const createAdmin = async (
   userId: string,
   authToken: string,
 ) => {
-  const response = await axios.post(
+  await axios.post(
     `${ADMIN_API}/${userId}`,
     { adminId },
     config(authToken),
   );
-  return response.status;
 };
 
 export const deleteAdmin = async (
@@ -61,4 +61,30 @@ export const deleteAdmin = async (
     data: { adminId },
   });
   return response.status;
+};
+
+export const updateLootboxPrice = async (
+  adminId: string,
+  lootboxId: string,
+  price: number,
+  authToken: string,
+) => {
+  const response = await axios.put(
+    `${ADMIN_API}/lootbox/${lootboxId}`,
+    { adminId, price },
+    config(authToken),
+  );
+  return response.status;
+};
+
+export const getUsersMatchingSearch = async (
+  adminId: string,
+  searchCriteria: string,
+  authToken: string,
+) => {
+  const response = await axios.get(
+    `${ADMIN_API}/users/${adminId}/${searchCriteria}`,
+    config(authToken),
+  );
+  return response.data;
 };
