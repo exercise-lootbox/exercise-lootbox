@@ -6,9 +6,9 @@ import { useLocation, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleResponse } from "./sampleResponse";
-import { sportTypes, trainerTypes } from "../../types/index";
 import { showAdminContent } from "../../utils";
 import AdminSearch from "./AdminSearch";
+import { sportTypes, trainerTypes, sportIcon } from "../../types/index";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
@@ -184,19 +184,30 @@ function Search() {
           {results.map((result: any, index: number) => {
             const displayDate = new Date(result.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const displaySportType = result.sport_type.replace(/\B(?=[A-Z])/g, ' ');
+            const displaySportIcon = sportIcon(result.sport_type);
             const displayElapsedTime = new Date(result.elapsed_time * 1000).toISOString().substr(11, 8);
             const displayTrainer = result.trainer ? "Trainer" : "Not a Trainer";
-            const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
+            // const displayLocation = constructLocationString(result.location_city, result.location_state, result.location_country);
+            const displayLocation = "Boston, Massachusetts, USA";
             return (
               <div key={index} className="result-item" onClick={() => eventDetails(result.id)}>
-                <h2>{result.name}</h2>
-                <p>{displayDate}</p>
-                <p>{displaySportType}</p>
-                <p>{displayElapsedTime}</p>
-                <p>{result.distance} meters</p>
+                <span className="result-header">
+                  <span>
+                    <h2 className="margin-bottom-10">{result.name}</h2>
+                    <span className="result-body">
+                      <p className="ml-0">{`${displaySportIcon} ${displaySportType}`}</p> 
+                      <p className="separator">|</p>
+                      <p>{`⏱️ ${displayElapsedTime}`}</p>
+                      <p className="separator">|</p>
+                      <p>{`💨 ${result.distance}`} meters</p>
+                    </span>
+                  </span>
+                  <span className="right-header">
+                    <p className="right-margin-5">{displayDate}</p>
+                    <p>{displayLocation}</p>
+                  </span> 
+                </span>
                 <p>{displayTrainer}</p>
-                <p>{result.comment_count} comment{result.comment_count === 1 ? "" : "s"}</p>
-                <p>{displayLocation}</p>
               </div>
             );
           })}
