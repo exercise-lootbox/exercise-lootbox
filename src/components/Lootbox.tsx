@@ -16,6 +16,7 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
   const userInfo = useSelector((state: any) => state.persistedReducer);
   const adminId = useSelector((state: any) => state.persistedReducer.adminId);
   const authToken = useSelector((state: any) => state.persistedReducer.authToken);
+  const isLoggedIn = useSelector((state: any) => state.persistedReducer.isLoggedIn);
   const [wonItem, setWonItem] = useState<ItemInfo | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +25,10 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
 
   const buyItem = async () => {
     try {
+      if (!isLoggedIn) {
+        errorToast("You must be logged in to buy items!");
+        return;
+      }
       const item = await getRandomItem(lootbox._id);
       await userClient.buyItem(
         userInfo.userId,

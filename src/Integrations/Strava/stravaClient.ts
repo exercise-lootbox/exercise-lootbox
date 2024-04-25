@@ -33,16 +33,10 @@ export const getRecentActivities = async (
 
 export const getStravaActivity = async (
   stravaId: string,
-  authToken: string,
   activityId: string,
 ) => {
-  const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
-  };
-
   let response = await axios.get(
     `${STRAVA_API}/activities/${stravaId}/${activityId}`,
-    config,
   );
   return response.data;
 };

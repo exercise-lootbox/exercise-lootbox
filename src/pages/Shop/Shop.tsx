@@ -19,6 +19,9 @@ export default function Shop() {
   const actingAsAdmin = useSelector(
     (state: FitCoinState) => state.persistedReducer.actingAsAdmin,
   );
+  const isLoggedIn = useSelector(
+    (state: FitCoinState) => state.persistedReducer.isLoggedIn,
+  );
   const adminActive = showAdminContent(adminId, actingAsAdmin);
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function Shop() {
       {!adminActive &&
         <div className="shop-header">
           <h1>Shop</h1>
-          <Coins coins={coins} />
+          {isLoggedIn && <Coins coins={coins} />}
         </div>
       }
     </div>

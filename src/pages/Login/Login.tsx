@@ -157,7 +157,6 @@ function Login() {
   return (
     <div className="row">
       <div className="col-lg-8 col-md-7 col-sm-6 d-none d-sm-block fc-login-background">
-        <h1>[Logo Here]</h1>
         <h2>Welcome to FitCoin 💪</h2>
       </div>
       <div className="col-lg-4 col-md-5 col-sm-6 fc-login-form">

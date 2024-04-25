@@ -3,17 +3,14 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleDetails } from "./sampleDetails";
+import { useLocation } from "react-router";
 import * as client from "../../Integrations/Strava/stravaClient";
 import './index.css';
 
 function Details() {
   const { did } = useParams();
-
+  const location = useLocation();
   const [details, setDetails] = useState(sampleDetails);
-
-  const authToken = useSelector(
-    (state: FitCoinState) => state.persistedReducer.authToken,
-  );
   const stravaId = useSelector(
     (state: FitCoinState) => state.persistedReducer.stravaId,
   );
@@ -21,17 +18,22 @@ function Details() {
   // Fetch details of the activity from backend
   useEffect(() => {
     const fetchDetails = async (sid: string) => {
-      if (sid !== "" && authToken !== "") {
-        const activity = await client.getStravaActivity(sid, authToken, did || "");
+      if (sid !== "") {
+        const activity = await client.getStravaActivity(sid, did || "");
         setDetails(activity);
       }
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const otherUserStravaId = urlParams.get('stravaId');
+    const search = location.search;
+    let otherUserStravaId = null;
+
+    if (search) {
+      const params = new URLSearchParams(search);
+      otherUserStravaId = params.get('stravaId');
+    }
 
     fetchDetails(otherUserStravaId || stravaId);
-  }, [stravaId, authToken, did]);
+  }, [stravaId, did, location.search]);
 
   // Render the following components in the details page
   const componentsToRender = ['distance', 'moving_time', 'elapsed_time', 'total_elevation_gain',
