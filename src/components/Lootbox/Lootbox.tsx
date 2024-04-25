@@ -1,22 +1,32 @@
-import { useState } from "react";
-import "../css/lootbox.css";
+import React, { useState } from "react";
+import "../../css/lootbox.css";
 import { Link } from "react-router-dom";
-import { ItemInfo, LootboxInfo } from "../types";
-import { getRandomItem } from "../utils";
-import * as userClient from "../pages/Login/userClient";
-import * as adminClient from "../Admin/adminClient";
+import { ItemInfo, LootboxInfo } from "../../types";
+import { getRandomItem } from "../../utils";
+import * as userClient from "../../pages/Login/userClient";
+import * as adminClient from "../../Admin/adminClient";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCoins } from "../pages/Login/userReducer";
-import { errorToast, successToast } from "./toasts";
+import { addCoins } from "../../pages/Login/userReducer";
+import { errorToast, successToast } from "../toasts";
 import { useDisclosure } from "@chakra-ui/react";
-import BoughtItem from "./Items/BoughtItem";
+import BoughtItem from "../Items/BoughtItem";
 
-export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, forAdmin: boolean }) {
+export default function Lootbox({
+  lootbox,
+  forAdmin,
+}: {
+  lootbox: LootboxInfo;
+  forAdmin: boolean;
+}) {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: any) => state.persistedReducer);
   const adminId = useSelector((state: any) => state.persistedReducer.adminId);
-  const authToken = useSelector((state: any) => state.persistedReducer.authToken);
-  const isLoggedIn = useSelector((state: any) => state.persistedReducer.isLoggedIn);
+  const authToken = useSelector(
+    (state: any) => state.persistedReducer.authToken,
+  );
+  const isLoggedIn = useSelector(
+    (state: any) => state.persistedReducer.isLoggedIn,
+  );
   const [wonItem, setWonItem] = useState<ItemInfo | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
@@ -37,8 +47,8 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
         item._id,
       );
       setWonItem(item);
-      dispatch(updateCoins(lootbox.price));
-      successToast(`You bought ${item.name}`);
+      dispatch(addCoins(-lootbox.price));
+      successToast(`You Won A ${item.name}`);
       onOpen();
     } catch (error: any) {
       errorToast(error.message);
@@ -48,34 +58,40 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
   const handleEditClicked = () => {
     setPreEditPrice(price);
     setIsEditing(true);
-  }
+  };
 
   const handleCancel = () => {
     setPrice(preEditPrice);
     setIsEditing(false);
-  }
+  };
 
   const handleSave = async () => {
     try {
-      await adminClient.updateLootboxPrice(adminId, lootbox._id, price, authToken);
+      await adminClient.updateLootboxPrice(
+        adminId,
+        lootbox._id,
+        price,
+        authToken,
+      );
       setIsEditing(false);
     } catch (error: any) {
       errorToast(error.message);
     }
-  }
+  };
 
   function lootboxPrice() {
     if (forAdmin && isEditing) {
       return (
-        <input className="form-control w-50"
+        <input
+          className="form-control w-50"
           type="number"
           value={price}
           placeholder={"Price"}
           onChange={(e) => setPrice(parseInt(e.target.value))}
         />
-      )
+      );
     } else {
-      return <p className="lootbox-price">{price} 💰</p>
+      return <p className="lootbox-price">{price} 💰</p>;
     }
   }
 
@@ -91,15 +107,18 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
               Save
             </button>
           </div>
-        )
+        );
       } else {
         return (
           <div className="lootbox-buttons">
-            <button className="button primary-button flex-grow-1" onClick={handleEditClicked}>
+            <button
+              className="button primary-button flex-grow-1"
+              onClick={handleEditClicked}
+            >
               Edit
             </button>
           </div>
-        )
+        );
       }
     } else {
       return (
@@ -111,7 +130,7 @@ export default function Lootbox({ lootbox, forAdmin }: { lootbox: LootboxInfo, f
             View
           </Link>
         </div>
-      )
+      );
     }
   }
 

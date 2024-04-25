@@ -18,9 +18,7 @@ export default function Inventory() {
   const auth = useSelector(
     (state: FitCoinState) => state.persistedReducer.authToken,
   );
-
   const [items, setItems] = useState<ItemInfo[]>([]);
-
   const [user, setUser] = useState<string>("");
 
   useEffect(() => {
