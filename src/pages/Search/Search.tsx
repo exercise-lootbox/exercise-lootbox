@@ -7,15 +7,26 @@ import { useSelector } from "react-redux";
 import { FitCoinState } from "../../store/configureStore";
 import { sampleResponse } from "./sampleResponse";
 import { sportTypes, trainerTypes } from "../../types/index";
+import { showAdminContent } from "../../utils";
+import AdminSearch from "./AdminSearch";
 
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 function Search() {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const adminId = useSelector(
+    (state: FitCoinState) => state.persistedReducer.adminId,
+  );
+  const actingAsAdmin = useSelector(
+    (state: FitCoinState) => state.persistedReducer.actingAsAdmin,
+  );
+  const adminActive = showAdminContent(adminId, actingAsAdmin);
   const stravaId = useSelector(
     (state: FitCoinState) => state.persistedReducer.stravaId,
+  );
+  const isLoggedIn = useSelector(
+    (state: FitCoinState) => state.persistedReducer.isLoggedIn,
   );
 
   // Default search parameters
@@ -47,7 +58,9 @@ function Search() {
         newParameters[key] = value;
       });
       setParameters(newParameters);
-      getResults(newParameters);
+      if (!adminActive) {
+        getResults(newParameters);
+      }
     }
   }, [location.search, stravaId]);
 
@@ -132,9 +145,13 @@ function Search() {
     }
   }
 
+  if (adminActive) {
+    return <AdminSearch />;
+  }
+
   return (
     <div>
-      <h1 className="search-header">Search {stravaId === "" ? "(not logged in)" : ""}</h1>
+      <h1 className="search-header">Search {isLoggedIn ? "Your" : ""} Activities</h1>
       <div className="search-page">
         <div className="search-bar">
           {components.map((component, index: number) => {
