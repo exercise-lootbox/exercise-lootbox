@@ -70,8 +70,11 @@ function Profile() {
     }
     const fetchStravaData = async () => {
       try {
+        if (userProfile.stravaId === "") {
+          return;
+        }
         const stravaData = await stravaClient.getRecentActivities(
-          uid || userId,
+          uid ? uid : userId,
           authToken,
         );
         setRecentStravaData(stravaData);
@@ -107,11 +110,16 @@ function Profile() {
       return;
     }
 
+    if (uid && uid === userId) {
+      navigate("/profile", { replace: true });
+      return;
+    }
+
     fetchUserProfile();
     fetchStravaData();
     fetchAdminInfo();
     fetchMostRareItems();
-  }, [authToken, uid, userId, isLoggedIn, navigate, userProfile.adminId, adminId]);
+  }, [authToken, uid, userId, isLoggedIn, navigate, userProfile.adminId, adminId, userProfile.stravaId]);
 
   const handleEdit = () => {
     if (isEditing) {
@@ -353,7 +361,6 @@ function Profile() {
       }
     </div>
   )
-
 
   const recentActivities: JSX.Element = (
     <div>

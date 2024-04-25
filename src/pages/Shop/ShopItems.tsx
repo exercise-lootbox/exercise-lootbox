@@ -73,14 +73,14 @@ export default function ShopItems() {
         <Coins coins={coins} />
       </div>
       <div className="lootbox-wrapper">
-        <Lootbox lootbox={lootbox} />
+        <Lootbox lootbox={lootbox} forAdmin={false} />
       </div>
 
       <div className="items">
         {sortedItems.map((item) => (
-          <>
+          <div key={item._id}>
             <Item key={item._id} item={item} lootbox={lootbox.name} />
-          </>
+          </div>
         ))}
       </div>
     </div>
